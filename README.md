@@ -16,8 +16,8 @@ Projeto desenvolvido para a disciplina de **Análise e Projeto de Sistemas**, co
 
 ## Integrantes
 
-- [Nome do integrante 1]
-- [Nome do integrante 2]
+- Kayque da Silva Cremonini
+- Felipe Rafael Dias Delfante
 
 ## Tecnologias
 
