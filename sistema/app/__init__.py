@@ -37,16 +37,25 @@ def create_app(config_teste=None):
     app.before_request(exigir_login)
     app.jinja_env.filters["nome_perfil"] = nome_perfil
 
+    from app.services import pessoa_service, veiculo_service
+    app.jinja_env.filters["nome_tipo"] = pessoa_service.nome_tipo
+    app.jinja_env.filters["formatar_cpf"] = pessoa_service.formatar_cpf
+    app.jinja_env.filters["formatar_placa"] = veiculo_service.formatar_placa
+
     @app.context_processor
     def variaveis_dos_templates():
         return {"usuario": g.get("usuario"), "pode": pode, "csrf_token": token_csrf}
 
     from app.routes.auth import auth_bp
     from app.routes.main import main_bp
+    from app.routes.pessoas import pessoas_bp
     from app.routes.usuarios import usuarios_bp
+    from app.routes.veiculos import veiculos_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(usuarios_bp)
+    app.register_blueprint(pessoas_bp)
+    app.register_blueprint(veiculos_bp)
 
     @app.errorhandler(400)
     def erro_400(e):

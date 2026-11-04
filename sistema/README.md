@@ -17,6 +17,7 @@ Abra http://127.0.0.1:5000 no navegador.
 ## Estrutura
 
 - `app/routes/`: telas e ações de cada módulo
+- `app/services/`: regras de negócio e validações
 - `app/templates/`: páginas HTML
 - `app/static/`: CSS e JavaScript
 - `run.py`: inicia o sistema
@@ -52,6 +53,16 @@ O script pergunta o login e a senha (mínimo de 6 caracteres). Depois rode
 `venv\Scripts\python.exe run.py` e entre em http://127.0.0.1:5000.
 
 O administrador cadastra os demais usuários no menu **Usuários**.
+
+## Cadastro de pessoas e veículos
+
+No menu lateral, **Pessoas** e **Veículos** (administrador e porteiro):
+
+- Cadastre primeiro a pessoa e depois o veículo, escolhendo o proprietário.
+- O CPF e a placa não podem se repetir. O CPF pode ser digitado com ou sem pontos e traço;
+  a placa aceita `ABC-1234` e `ABC1D23` (maiúsculas ou minúsculas).
+- Use a caixa de busca para achar pessoas (nome ou CPF) e veículos (placa, modelo ou proprietário).
+- Cadastros não são apagados: use **Desativar**, para que o histórico de acessos seja preservado.
 
 ## Perfis e permissões
 

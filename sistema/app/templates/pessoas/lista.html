@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block titulo %}Pessoas — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">Pessoas</h1>
+  <a class="btn btn-primary" href="{{ url_for('pessoas.nova') }}">Nova pessoa</a>
+</div>
+<form method="get" class="row g-2 mb-3">
+  <div class="col-sm-8 col-md-6">
+    <input type="search" class="form-control" name="busca" value="{{ busca }}"
+           placeholder="Buscar por nome ou CPF" aria-label="Buscar por nome ou CPF">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+    {% if busca %}<a class="btn btn-outline-secondary" href="{{ url_for('pessoas.listar') }}">Limpar</a>{% endif %}
+  </div>
+</form>
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Nome</th><th>CPF</th><th>Tipo</th><th>Telefone</th><th>Endereço / setor</th><th>Situação</th><th class="text-end">Ações</th></tr>
+      </thead>
+      <tbody>
+        {% for p in pessoas %}
+        <tr>
+          <td>{{ p.nome }}</td>
+          <td>{{ p.cpf|formatar_cpf }}</td>
+          <td>{{ p.tipo|nome_tipo }}</td>
+          <td>{{ p.telefone or '—' }}</td>
+          <td>{{ p.endereco_setor or '—' }}</td>
+          <td>
+            {% if p.ativo %}<span class="badge text-bg-success">Ativa</span>
+            {% else %}<span class="badge text-bg-secondary">Inativa</span>{% endif %}
+          </td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('pessoas.editar', pessoa_id=p.id) }}">Editar</a>
+            <form method="post" action="{{ url_for('pessoas.alternar', pessoa_id=p.id) }}" class="d-inline"
+                  onsubmit="return confirm('{{ 'Desativar' if p.ativo else 'Ativar' }} o cadastro de {{ p.nome|replace("'", "") }}?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm {{ 'btn-outline-danger' if p.ativo else 'btn-outline-success' }}">
+                {{ 'Desativar' if p.ativo else 'Ativar' }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">
+          {% if busca %}Nenhuma pessoa encontrada para "{{ busca }}".{% else %}Nenhuma pessoa cadastrada ainda.{% endif %}
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card shadow-sm form-caixa">
+  <div class="card-body p-4">
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome completo</label>
+        <input type="text" class="form-control" id="nome" name="nome" value="{{ valores.nome }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="cpf" class="form-label">CPF</label>
+        <input type="text" class="form-control" id="cpf" name="cpf" value="{{ valores.cpf|formatar_cpf }}"
+               inputmode="numeric" placeholder="000.000.000-00" required>
+        <div class="form-text">Pode digitar com ou sem pontos e traço. Cada CPF só pode ser cadastrado uma vez.</div>
+      </div>
+      <div class="mb-3">
+        <label for="tipo" class="form-label">Tipo</label>
+        <select class="form-select" id="tipo" name="tipo" required>
+          <option value="">Selecione...</option>
+          {% for chave, nome in tipos.items() %}
+          <option value="{{ chave }}" {{ 'selected' if valores.tipo == chave else '' }}>{{ nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="telefone" class="form-label">Telefone (opcional)</label>
+        <input type="text" class="form-control" id="telefone" name="telefone" value="{{ valores.telefone }}"
+               inputmode="tel" placeholder="(11) 91234-5678">
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">E-mail (opcional)</label>
+        <input type="email" class="form-control" id="email" name="email" value="{{ valores.email }}">
+      </div>
+      <div class="mb-4">
+        <label for="endereco_setor" class="form-label">Endereço ou setor (opcional)</label>
+        <input type="text" class="form-control" id="endereco_setor" name="endereco_setor"
+               value="{{ valores.endereco_setor }}" placeholder="Ex.: Bloco B, apto 21, ou Setor financeiro">
+      </div>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('pessoas.listar') }}">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
