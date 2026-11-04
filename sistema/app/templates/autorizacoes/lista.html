@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block titulo %}Autorizações — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">Autorização de visitantes</h1>
+<ul class="nav nav-pills mb-3">
+  {% for chave, nome in filtros %}
+  <li class="nav-item">
+    <a class="nav-link {{ 'active' if status == chave else '' }}" href="{{ url_for('autorizacoes.listar', status=chave) }}">
+      {{ nome }}
+      {% if chave != 'todas' %}<span class="badge text-bg-light">{{ contagem[chave] }}</span>{% endif %}
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Solicitada em</th><th>Visitante</th><th>Visita a</th><th>Motivo</th><th>Situação</th><th class="text-end">Ações</th></tr>
+      </thead>
+      <tbody>
+        {% for a in autorizacoes %}
+        <tr>
+          <td>{{ a.solicitado_em|data_br }}</td>
+          <td>{{ a.visitante_nome }}<div class="small text-muted">CPF {{ a.visitante_cpf|formatar_cpf }}</div></td>
+          <td>{{ a.visitado_nome }}</td>
+          <td>{{ a.motivo }}</td>
+          <td>
+            {% if a.status == 'aprovada' %}<span class="badge text-bg-success">Autorizada</span>
+              <div class="small text-muted">{{ a.data_inicio|data_br }}{% if a.data_fim != a.data_inicio %} a {{ a.data_fim|data_br }}{% endif %}</div>
+            {% elif a.status == 'negada' %}<span class="badge text-bg-danger">Negada</span>
+            {% else %}<span class="badge text-bg-warning">Pendente</span>{% endif %}
+          </td>
+          <td class="text-end">
+            {% if a.status == 'pendente' %}
+            <a class="btn btn-sm btn-primary" href="{{ url_for('autorizacoes.decidir', autorizacao_id=a.id) }}">Analisar</a>
+            {% else %}
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('autorizacoes.decidir', autorizacao_id=a.id) }}">Ver decisão</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">
+          {% if status == 'pendente' %}Nenhuma solicitação aguardando decisão.{% else %}Nenhuma autorização nesta lista.{% endif %}
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

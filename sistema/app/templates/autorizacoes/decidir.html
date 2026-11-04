@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block titulo %}Autorização — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">Solicitação de autorização</h1>
+<div class="card shadow-sm form-caixa mb-3">
+  <div class="card-body p-4">
+    <dl class="row mb-0">
+      <dt class="col-sm-4">Visitante</dt><dd class="col-sm-8">{{ autorizacao.visitante_nome }}</dd>
+      <dt class="col-sm-4">CPF</dt><dd class="col-sm-8">{{ autorizacao.visitante_cpf|formatar_cpf }}</dd>
+      <dt class="col-sm-4">Telefone</dt><dd class="col-sm-8">{{ autorizacao.visitante_telefone or '—' }}</dd>
+      <dt class="col-sm-4">Pessoa visitada</dt><dd class="col-sm-8">{{ autorizacao.visitado_nome }}</dd>
+      <dt class="col-sm-4">Motivo</dt><dd class="col-sm-8">{{ autorizacao.motivo }}</dd>
+      <dt class="col-sm-4">Solicitada em</dt><dd class="col-sm-8">{{ autorizacao.solicitado_em|data_br }}</dd>
+      <dt class="col-sm-4">Situação</dt>
+      <dd class="col-sm-8">
+        {% if autorizacao.status == 'aprovada' %}<span class="badge text-bg-success">Autorizada</span>
+        {% elif autorizacao.status == 'negada' %}<span class="badge text-bg-danger">Negada</span>
+        {% else %}<span class="badge text-bg-warning">Pendente</span>{% endif %}
+      </dd>
+      {% if autorizacao.status != 'pendente' %}
+      <dt class="col-sm-4">Decidida por</dt>
+      <dd class="col-sm-8">{{ autorizacao.aprovador_login or '—' }} em {{ autorizacao.decidido_em|data_br }}</dd>
+      {% if autorizacao.status == 'aprovada' %}
+      <dt class="col-sm-4">Período permitido</dt>
+      <dd class="col-sm-8">{{ autorizacao.data_inicio|data_br }}{% if autorizacao.data_fim != autorizacao.data_inicio %} a {{ autorizacao.data_fim|data_br }}{% endif %}</dd>
+      {% endif %}
+      <dt class="col-sm-4">Observação</dt><dd class="col-sm-8">{{ autorizacao.observacao or '—' }}</dd>
+      {% endif %}
+    </dl>
+  </div>
+</div>
+
+{% if autorizacao.status == 'pendente' %}
+<div class="card shadow-sm form-caixa">
+  <div class="card-body p-4">
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <h2 class="h5 mb-3">Decisão</h2>
+      <div class="row g-3 mb-3">
+        <div class="col-sm-6">
+          <label for="data_inicio" class="form-label">Autorizado a partir de</label>
+          <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{ valores.data_inicio }}">
+        </div>
+        <div class="col-sm-6">
+          <label for="data_fim" class="form-label">Até (opcional)</label>
+          <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{ valores.data_fim }}">
+        </div>
+        <div class="col-12 form-text mt-0">Se deixar "Até" em branco, a autorização vale só no dia inicial. As datas só são usadas ao autorizar.</div>
+      </div>
+      <div class="mb-4">
+        <label for="observacao" class="form-label">Observação (opcional)</label>
+        <input type="text" class="form-control" id="observacao" name="observacao" value="{{ valores.observacao }}">
+      </div>
+      <button type="submit" name="acao" value="aprovar" class="btn btn-success">Autorizar</button>
+      <button type="submit" name="acao" value="negar" class="btn btn-danger"
+              onclick="return confirm('Negar a entrada deste visitante?');">Negar</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('autorizacoes.listar') }}">Voltar</a>
+    </form>
+  </div>
+</div>
+{% else %}
+<a class="btn btn-outline-secondary" href="{{ url_for('autorizacoes.listar', status=autorizacao.status) }}">Voltar</a>
+{% endif %}
+{% endblock %}

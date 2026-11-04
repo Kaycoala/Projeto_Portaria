@@ -64,6 +64,14 @@ No menu lateral, **Pessoas** e **Veículos** (administrador e porteiro):
 - Use a caixa de busca para achar pessoas (nome ou CPF) e veículos (placa, modelo ou proprietário).
 - Cadastros não são apagados: use **Desativar**, para que o histórico de acessos seja preservado.
 
+## Visitantes e autorizações
+
+- **Porteiro:** menu **Visitantes** > *Novo visitante*. A solicitação fica "aguardando autorização".
+- **Aprovador (gerente):** menu **Autorizações** > *Analisar*. Escolha **Autorizar** (com a data inicial
+  e, se quiser, a data final) ou **Negar**. A decisão fica registrada e não pode ser desfeita.
+- Se o visitante voltar outro dia, o porteiro usa **Nova solicitação** na lista de visitantes.
+- Nesta versão a autorização só é registrada. A conferência na entrada vem na V0.6.0.
+
 ## Perfis e permissões
 
 | Perfil | O que pode fazer (nesta versão e nas próximas) |

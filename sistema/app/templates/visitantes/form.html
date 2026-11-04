@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card shadow-sm form-caixa">
+  <div class="card-body p-4">
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome completo</label>
+        <input type="text" class="form-control" id="nome" name="nome" value="{{ valores.nome }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="cpf" class="form-label">CPF</label>
+        <input type="text" class="form-control" id="cpf" name="cpf" value="{{ valores.cpf|formatar_cpf }}"
+               inputmode="numeric" placeholder="000.000.000-00" required>
+        <div class="form-text">O mesmo visitante pode voltar outras vezes.</div>
+      </div>
+      <div class="mb-3">
+        <label for="telefone" class="form-label">Telefone (opcional)</label>
+        <input type="text" class="form-control" id="telefone" name="telefone" value="{{ valores.telefone }}"
+               inputmode="tel" placeholder="(11) 91234-5678">
+      </div>
+      <div class="mb-3">
+        <label for="pessoa_visitada_id" class="form-label">Pessoa visitada</label>
+        <select class="form-select" id="pessoa_visitada_id" name="pessoa_visitada_id" required>
+          <option value="">Selecione...</option>
+          {% for p in pessoas %}
+          <option value="{{ p.id }}" {{ 'selected' if valores.pessoa_visitada_id == p.id|string else '' }}>{{ p.nome }}</option>
+          {% endfor %}
+        </select>
+        {% if not pessoas %}
+        <div class="form-text text-danger">Cadastre uma pessoa antes de cadastrar o visitante.</div>
+        {% endif %}
+      </div>
+      <div class="mb-4">
+        <label for="motivo" class="form-label">Motivo da visita</label>
+        <input type="text" class="form-control" id="motivo" name="motivo" value="{{ valores.motivo }}" required>
+      </div>
+      {% if not editando %}
+      <p class="small text-muted">Ao salvar, a solicitação segue para autorização do responsável.</p>
+      {% endif %}
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('visitantes.listar') }}">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

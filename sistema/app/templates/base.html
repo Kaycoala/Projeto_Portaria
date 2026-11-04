@@ -18,6 +18,12 @@
         <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('pessoas.listar') }}">Pessoas</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('veiculos.listar') }}">Veículos</a></li>
         {% endif %}
+        {% if pode('cadastrar_visitantes') %}
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('visitantes.listar') }}">Visitantes</a></li>
+        {% endif %}
+        {% if pode('autorizar_visitantes') %}
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('autorizacoes.listar') }}">Autorizações</a></li>
+        {% endif %}
         {% if pode('gerenciar_usuarios') %}
         <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('usuarios.listar') }}">Usuários</a></li>
         {% endif %}
