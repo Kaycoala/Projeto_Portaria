@@ -48,6 +48,7 @@ def create_app(config_teste=None):
     def variaveis_dos_templates():
         return {"usuario": g.get("usuario"), "pode": pode, "csrf_token": token_csrf}
 
+    from app.routes.acessos import acessos_bp
     from app.routes.auth import auth_bp
     from app.routes.autorizacoes import autorizacoes_bp
     from app.routes.main import main_bp
@@ -62,6 +63,7 @@ def create_app(config_teste=None):
     app.register_blueprint(veiculos_bp)
     app.register_blueprint(visitantes_bp)
     app.register_blueprint(autorizacoes_bp)
+    app.register_blueprint(acessos_bp)
 
     @app.errorhandler(400)
     def erro_400(e):

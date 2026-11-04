@@ -14,6 +14,9 @@
       <h5 class="mb-4">Portaria</h5>
       <ul class="nav flex-column mb-auto">
         <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('main.inicio') }}">Início</a></li>
+        {% if pode('registrar_acesso') %}
+        <li class="nav-item"><a class="nav-link text-white fw-semibold" href="{{ url_for('acessos.portaria') }}">Entrada e saída</a></li>
+        {% endif %}
         {% if pode('gerenciar_cadastros') %}
         <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('pessoas.listar') }}">Pessoas</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('veiculos.listar') }}">Veículos</a></li>

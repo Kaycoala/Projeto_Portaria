@@ -70,7 +70,17 @@ No menu lateral, **Pessoas** e **Veículos** (administrador e porteiro):
 - **Aprovador (gerente):** menu **Autorizações** > *Analisar*. Escolha **Autorizar** (com a data inicial
   e, se quiser, a data final) ou **Negar**. A decisão fica registrada e não pode ser desfeita.
 - Se o visitante voltar outro dia, o porteiro usa **Nova solicitação** na lista de visitantes.
-- Nesta versão a autorização só é registrada. A conferência na entrada vem na V0.6.0.
+- A autorização é conferida na hora da entrada (veja a seção abaixo).
+
+## Entrada e saída
+
+No menu **Entrada e saída** (porteiro e administrador):
+
+- Escolha a pessoa, o visitante ou o veículo e clique em **Registrar entrada**. A data e a hora são gravadas automaticamente.
+- **Visitante:** só entra com autorização válida para hoje. Se estiver aguardando, negada, ainda sem data
+  de início ou vencida, o sistema bloqueia e explica o motivo.
+- Quem já está dentro aparece na tabela **Dentro agora**; use **Registrar saída** quando sair.
+- Os registros nunca são apagados, a saída só completa o horário.
 
 ## Perfis e permissões
 

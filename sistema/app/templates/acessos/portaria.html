@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block titulo %}Entrada e saída — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">Entrada e saída</h1>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h6 text-uppercase text-muted">Entrada de pessoa</h2>
+        <form method="post" action="{{ url_for('acessos.entrada_pessoa') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <select class="form-select mb-2" name="pessoa_id" aria-label="Pessoa" required>
+            <option value="">Selecione a pessoa...</option>
+            {% for p in pessoas %}<option value="{{ p.id }}">{{ p.nome }} ({{ p.tipo|nome_tipo }})</option>{% endfor %}
+          </select>
+          <input type="text" class="form-control mb-2" name="observacao" placeholder="Observação (opcional)">
+          <button type="submit" class="btn btn-success w-100" {{ '' if pessoas else 'disabled' }}>Registrar entrada</button>
+          {% if not pessoas %}<div class="form-text">Nenhuma pessoa disponível (cadastre ou verifique quem já está dentro).</div>{% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h6 text-uppercase text-muted">Entrada de visitante</h2>
+        <form method="post" action="{{ url_for('acessos.entrada_visitante') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <select class="form-select mb-2" name="visitante_id" aria-label="Visitante" required>
+            <option value="">Selecione o visitante...</option>
+            {% for v in visitantes %}
+            <option value="{{ v.id }}">{{ v.nome }} — {{ 'autorizado' if v.status == 'aprovada' else ('negado' if v.status == 'negada' else 'aguardando') }}</option>
+            {% endfor %}
+          </select>
+          <input type="text" class="form-control mb-2" name="observacao" placeholder="Observação (opcional)">
+          <button type="submit" class="btn btn-success w-100" {{ '' if visitantes else 'disabled' }}>Registrar entrada</button>
+          <div class="form-text">Só entra quem tem autorização válida para hoje.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h6 text-uppercase text-muted">Entrada de veículo</h2>
+        <form method="post" action="{{ url_for('acessos.entrada_veiculo') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <select class="form-select mb-2" name="veiculo_id" aria-label="Veículo" required>
+            <option value="">Selecione o veículo...</option>
+            {% for v in veiculos %}<option value="{{ v.id }}">{{ v.placa|formatar_placa }} — {{ v.modelo }} ({{ v.proprietario }})</option>{% endfor %}
+          </select>
+          <input type="text" class="form-control mb-2" name="observacao" placeholder="Observação (opcional)">
+          <button type="submit" class="btn btn-success w-100" {{ '' if veiculos else 'disabled' }}>Registrar entrada</button>
+          {% if not veiculos %}<div class="form-text">Nenhum veículo disponível (cadastre ou verifique quem já está dentro).</div>{% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="h5 mb-2">Dentro agora <span class="badge text-bg-secondary">{{ dentro|length }}</span></h2>
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Entrada</th><th>Tipo</th><th>Quem</th><th>Detalhes</th><th>Porteiro</th><th class="text-end">Ação</th></tr>
+      </thead>
+      <tbody>
+        {% for r in dentro %}
+        <tr>
+          <td>{{ r.entrada_em|data_br }}</td>
+          <td>
+            {% if r.tipo == 'pessoa' %}Pessoa{% elif r.tipo == 'visitante' %}Visitante{% else %}Veículo{% endif %}
+          </td>
+          <td class="fw-semibold">
+            {% if r.tipo == 'pessoa' %}{{ r.pessoa_nome }}
+            {% elif r.tipo == 'visitante' %}{{ r.visitante_nome }}
+            {% else %}{{ r.placa|formatar_placa }}{% endif %}
+          </td>
+          <td>
+            {% if r.tipo == 'pessoa' %}{{ r.pessoa_tipo|nome_tipo }}
+            {% elif r.tipo == 'visitante' %}Visita a {{ r.visitado_nome }}
+            {% else %}{{ r.modelo }}, {{ r.cor }} — {{ r.proprietario_nome }}{% endif %}
+            {% if r.observacao %}<div class="small text-muted">{{ r.observacao }}</div>{% endif %}
+          </td>
+          <td>{{ r.porteiro_login }}</td>
+          <td class="text-end">
+            <form method="post" action="{{ url_for('acessos.saida', registro_id=r.id) }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Registrar saída</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">Ninguém está dentro no momento.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
