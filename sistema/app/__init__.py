@@ -1,15 +1,27 @@
+import secrets
 from pathlib import Path
 
-from flask import Flask
+from flask import Flask, g, render_template
+
+
+def _chave_secreta(pasta):
+    """Gera (uma vez) e reaproveita a chave que protege a sessão de login."""
+    arquivo = Path(pasta) / "chave_secreta.txt"
+    if not arquivo.exists():
+        arquivo.write_text(secrets.token_hex(32))
+    return arquivo.read_text().strip()
 
 
 def create_app(config_teste=None):
     """Cria e configura a aplicação Flask."""
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "troque-esta-chave-em-producao"
     app.config["DATABASE"] = str(Path(app.instance_path) / "portaria.db")
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
     if config_teste:
         app.config.update(config_teste)
+    if not app.config.get("SECRET_KEY"):
+        Path(app.instance_path).mkdir(parents=True, exist_ok=True)
+        app.config["SECRET_KEY"] = _chave_secreta(app.instance_path)
 
     from app import db
     db.init_app(app)
@@ -17,7 +29,36 @@ def create_app(config_teste=None):
     if not Path(app.config["DATABASE"]).exists():
         db.criar_banco(app.config["DATABASE"])
 
+    from app.auth import exigir_login, pode
+    from app.permissoes import nome_perfil
+    from app.seguranca import token_csrf, verificar_csrf
+
+    app.before_request(verificar_csrf)
+    app.before_request(exigir_login)
+    app.jinja_env.filters["nome_perfil"] = nome_perfil
+
+    @app.context_processor
+    def variaveis_dos_templates():
+        return {"usuario": g.get("usuario"), "pode": pode, "csrf_token": token_csrf}
+
+    from app.routes.auth import auth_bp
     from app.routes.main import main_bp
+    from app.routes.usuarios import usuarios_bp
+    app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
+    app.register_blueprint(usuarios_bp)
+
+    @app.errorhandler(400)
+    def erro_400(e):
+        return render_template("erro.html", codigo=400, mensagem=e.description), 400
+
+    @app.errorhandler(403)
+    def erro_403(e):
+        return render_template("erro.html", codigo=403,
+                               mensagem="Você não tem permissão para acessar esta página."), 403
+
+    @app.errorhandler(404)
+    def erro_404(e):
+        return render_template("erro.html", codigo=404, mensagem="Página não encontrada."), 404
 
     return app

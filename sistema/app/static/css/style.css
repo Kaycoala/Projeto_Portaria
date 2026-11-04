@@ -1,2 +1,4 @@
 .sidebar { width: 220px; min-height: 100vh; }
 main { background: #f5f6fa; min-height: 100vh; }
+.login-caixa { max-width: 380px; width: 100%; }
+.form-caixa { max-width: 560px; }

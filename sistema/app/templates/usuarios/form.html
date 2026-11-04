@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card shadow-sm form-caixa">
+  <div class="card-body p-4">
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label for="login" class="form-label">Login</label>
+        <input type="text" class="form-control" id="login" name="login" value="{{ valores.login }}" required>
+        <div class="form-text">Letras minúsculas, números, ponto ou _ (de 3 a 30 caracteres).</div>
+      </div>
+      <div class="mb-3">
+        <label for="senha" class="form-label">Senha</label>
+        <input type="password" class="form-control" id="senha" name="senha" autocomplete="new-password"
+               {{ '' if editando else 'required' }}>
+        <div class="form-text">
+          {% if editando %}Deixe em branco para manter a senha atual.{% else %}Mínimo de 6 caracteres.{% endif %}
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="perfil_id" class="form-label">Perfil</label>
+        <select class="form-select" id="perfil_id" name="perfil_id" required>
+          <option value="">Selecione...</option>
+          {% for p in perfis %}
+          <option value="{{ p.id }}" {{ 'selected' if valores.perfil_id == p.id|string else '' }}>{{ p.nome|nome_perfil }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-4">
+        <label for="pessoa_id" class="form-label">Pessoa vinculada (opcional)</label>
+        <select class="form-select" id="pessoa_id" name="pessoa_id">
+          <option value="">Nenhuma</option>
+          {% for p in pessoas %}
+          <option value="{{ p.id }}" {{ 'selected' if valores.pessoa_id == p.id|string else '' }}>{{ p.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('usuarios.listar') }}">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

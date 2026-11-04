@@ -39,3 +39,27 @@ Tabelas: `perfil`, `pessoa`, `usuario`, `veiculo`, `visitante`, `autorizacao`,
 ```
 venv\Scripts\python.exe -m unittest discover tests -v
 ```
+
+## Primeiro acesso (login)
+
+O sistema exige login. Antes de entrar pela primeira vez, crie o administrador:
+
+```
+venv\Scripts\python.exe criar_admin.py
+```
+
+O script pergunta o login e a senha (mínimo de 6 caracteres). Depois rode
+`venv\Scripts\python.exe run.py` e entre em http://127.0.0.1:5000.
+
+O administrador cadastra os demais usuários no menu **Usuários**.
+
+## Perfis e permissões
+
+| Perfil | O que pode fazer (nesta versão e nas próximas) |
+|---|---|
+| Administrador | Tudo: usuários, cadastros, acessos, autorizações, ocorrências, relatórios |
+| Porteiro | Cadastros, visitantes, entradas e saídas, histórico e ocorrências |
+| Aprovador (Gerente) | Autorizar/negar visitantes e consultar o histórico |
+| Funcionário | Apenas entra no sistema (sem operações) |
+
+As regras ficam em `app/permissoes.py`.

@@ -9,13 +9,27 @@
 </head>
 <body>
   <div class="d-flex">
-    <nav class="sidebar bg-dark text-white p-3">
+    {% if usuario %}
+    <nav class="sidebar bg-dark text-white p-3 d-flex flex-column">
       <h5 class="mb-4">Portaria</h5>
-      <ul class="nav flex-column">
+      <ul class="nav flex-column mb-auto">
         <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('main.inicio') }}">Início</a></li>
+        {% if pode('gerenciar_usuarios') %}
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('usuarios.listar') }}">Usuários</a></li>
+        {% endif %}
       </ul>
+      <div class="border-top pt-3 small">
+        <div class="fw-semibold">{{ usuario.login }}</div>
+        <div class="text-white-50 mb-2">{{ usuario.perfil|nome_perfil }}</div>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-outline-light btn-sm w-100">Sair</button>
+        </form>
+      </div>
     </nav>
+    {% endif %}
     <main class="flex-grow-1 p-4">
+      {% include "_mensagens.html" %}
       {% block conteudo %}{% endblock %}
     </main>
   </div>

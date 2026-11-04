@@ -119,13 +119,15 @@ class TesteBanco(unittest.TestCase):
 
 
 class TesteAplicacao(unittest.TestCase):
-    def test_app_cria_banco_na_primeira_execucao_e_abre_pagina_inicial(self):
+    def test_app_cria_banco_na_primeira_execucao_e_exige_login(self):
         from app import create_app
         with tempfile.TemporaryDirectory() as pasta:
             caminho = Path(pasta) / "novo.db"
-            app = create_app({"DATABASE": str(caminho), "TESTING": True})
+            app = create_app({"DATABASE": str(caminho), "TESTING": True, "SECRET_KEY": "teste"})
             self.assertTrue(caminho.exists())
-            self.assertEqual(app.test_client().get("/").status_code, 200)
+            cliente = app.test_client()
+            self.assertEqual(cliente.get("/login").status_code, 200)
+            self.assertEqual(cliente.get("/").status_code, 302)
 
 
 if __name__ == "__main__":
