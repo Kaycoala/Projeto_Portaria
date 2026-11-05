@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">{{ titulo }}</h1>
+<div class="card shadow-sm form-caixa">
+  <div class="card-body p-4">
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label for="data_hora" class="form-label">Data e horário</label>
+        <input type="datetime-local" class="form-control" id="data_hora" name="data_hora"
+               value="{{ valores.data_hora }}" max="{{ agora }}" required>
+        <div class="form-text">Já vem preenchido com o momento atual; altere se a ocorrência foi antes.</div>
+      </div>
+      <div class="mb-3">
+        <label for="descricao" class="form-label">Descrição</label>
+        <textarea class="form-control" id="descricao" name="descricao" rows="4" maxlength="2000" required>{{ valores.descricao }}</textarea>
+      </div>
+      <div class="mb-4">
+        <label class="form-label">Pessoas envolvidas (opcional)</label>
+        <div class="border rounded p-2 bg-white" style="max-height: 220px; overflow: auto;">
+          {% for p in pessoas %}
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="pessoas" value="{{ p.id }}" id="pessoa{{ p.id }}"
+                   {{ 'checked' if p.id in marcadas else '' }}>
+            <label class="form-check-label" for="pessoa{{ p.id }}">{{ p.nome }} ({{ p.tipo|nome_tipo }}){{ '' if p.ativo else ' — inativa' }}</label>
+          </div>
+          {% else %}
+          <div class="text-muted small">Nenhuma pessoa cadastrada.</div>
+          {% endfor %}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('ocorrencias.listar') }}">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

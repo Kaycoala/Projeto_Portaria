@@ -82,6 +82,22 @@ No menu **Entrada e saída** (porteiro e administrador):
 - Quem já está dentro aparece na tabela **Dentro agora**; use **Registrar saída** quando sair.
 - Os registros nunca são apagados, a saída só completa o horário.
 
+## Histórico de acessos
+
+No menu **Histórico** (administrador, porteiro e aprovador):
+
+- Preencha um ou mais filtros (nome, CPF, placa, data inicial e final, tipo de acesso) e clique em **Pesquisar**. Sem filtros, aparecem os registros mais recentes (no máximo 200).
+- O nome também encontra o proprietário de um veículo. A consulta não altera nada.
+- **Só o administrador** vê os botões **Editar** (corrige a observação) e **Excluir**. A exclusão é lógica: o registro continua guardado e o administrador o enxerga marcado como "Excluído".
+
+## Ocorrências
+
+No menu **Ocorrências** (administrador e porteiro):
+
+- Clique em **Nova ocorrência**, confira a data e o horário (já vêm preenchidos), escreva a descrição e marque as pessoas envolvidas, se houver.
+- Use o filtro de datas para ver as ocorrências de um período.
+- Só o administrador edita ou exclui ocorrências (exclusão lógica).
+
 ## Perfis e permissões
 
 | Perfil | O que pode fazer (nesta versão e nas próximas) |

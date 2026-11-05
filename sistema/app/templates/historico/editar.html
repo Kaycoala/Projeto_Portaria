@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}Editar registro de acesso — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">Editar registro de acesso</h1>
+<div class="card shadow-sm form-caixa">
+  <div class="card-body p-4">
+    <dl class="mb-3">
+      <dt>Quem</dt><dd>{{ descricao }}</dd>
+      <dt>Entrada</dt><dd>{{ registro.entrada_em|data_br }}</dd>
+      <dt>Saída</dt><dd>{{ registro.saida_em|data_br if registro.saida_em else 'Ainda dentro' }}</dd>
+    </dl>
+    <p class="small text-muted">Por segurança, só a observação pode ser corrigida. Datas, horários e vínculos ficam como foram registrados.</p>
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-4">
+        <label for="observacao" class="form-label">Observação</label>
+        <input type="text" class="form-control" id="observacao" name="observacao" value="{{ observacao }}" maxlength="300">
+      </div>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('historico.listar') }}">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block titulo %}Histórico de acessos — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">Histórico de acessos</h1>
+<form method="get" class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col-md-4">
+        <label for="nome" class="form-label small mb-1">Nome</label>
+        <input type="text" class="form-control" id="nome" name="nome" value="{{ filtros.nome }}">
+      </div>
+      <div class="col-md-4">
+        <label for="cpf" class="form-label small mb-1">CPF</label>
+        <input type="text" class="form-control" id="cpf" name="cpf" value="{{ filtros.cpf }}"
+               inputmode="numeric" placeholder="com ou sem pontos e traço">
+      </div>
+      <div class="col-md-4">
+        <label for="placa" class="form-label small mb-1">Placa</label>
+        <input type="text" class="form-control" id="placa" name="placa" value="{{ filtros.placa }}" placeholder="ABC-1234">
+      </div>
+      <div class="col-md-4">
+        <label for="data_de" class="form-label small mb-1">Data inicial</label>
+        <input type="date" class="form-control" id="data_de" name="data_de" value="{{ filtros.data_de }}">
+      </div>
+      <div class="col-md-4">
+        <label for="data_ate" class="form-label small mb-1">Data final</label>
+        <input type="date" class="form-control" id="data_ate" name="data_ate" value="{{ filtros.data_ate }}">
+      </div>
+      <div class="col-md-4">
+        <label for="tipo" class="form-label small mb-1">Tipo de acesso</label>
+        <select class="form-select" id="tipo" name="tipo">
+          <option value="">Todos</option>
+          {% for chave, nome in tipos.items() %}
+          <option value="{{ chave }}" {{ 'selected' if filtros.tipo == chave else '' }}>{{ nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary">Pesquisar</button>
+      {% if filtrado %}<a class="btn btn-outline-secondary" href="{{ url_for('historico.listar') }}">Limpar filtros</a>{% endif %}
+    </div>
+  </div>
+</form>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Tipo</th><th>Quem</th><th>Entrada</th><th>Saída</th><th>Porteiro</th><th>Observação</th>
+          {% if pode('administrar_registros') %}<th class="text-end">Ações</th>{% endif %}</tr>
+      </thead>
+      <tbody>
+        {% for r in registros %}
+        <tr class="{{ '' if r.ativo else 'table-secondary text-muted' }}">
+          <td>
+            {% if r.tipo == 'pessoa' %}<span class="badge text-bg-primary">Pessoa</span>
+            {% elif r.tipo == 'visitante' %}<span class="badge text-bg-info">Visitante</span>
+            {% else %}<span class="badge text-bg-dark">Veículo</span>{% endif %}
+            {% if not r.ativo %}<span class="badge text-bg-secondary">Excluído</span>{% endif %}
+          </td>
+          <td>
+            {% if r.tipo == 'pessoa' %}
+              {{ r.pessoa_nome }}<div class="small text-muted">CPF {{ r.pessoa_cpf|formatar_cpf }} · {{ r.pessoa_tipo|nome_tipo }}</div>
+            {% elif r.tipo == 'visitante' %}
+              {{ r.visitante_nome }}<div class="small text-muted">CPF {{ r.visitante_cpf|formatar_cpf }} · visita {{ r.visitado_nome }}</div>
+            {% else %}
+              {{ r.placa|formatar_placa }} — {{ r.modelo }}<div class="small text-muted">Responsável: {{ r.proprietario_nome }}</div>
+            {% endif %}
+          </td>
+          <td>{{ r.entrada_em|data_br }}</td>
+          <td>{% if r.saida_em %}{{ r.saida_em|data_br }}{% else %}<span class="badge text-bg-success">Dentro</span>{% endif %}</td>
+          <td>{{ r.porteiro_login }}</td>
+          <td>{{ r.observacao or '' }}</td>
+          {% if pode('administrar_registros') %}
+          <td class="text-end">
+            {% if r.ativo %}
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('historico.editar', registro_id=r.id) }}">Editar</a>
+            <form method="post" action="{{ url_for('historico.excluir', registro_id=r.id) }}" class="d-inline"
+                  onsubmit="return confirm('Excluir este registro de acesso? Ele continuará guardado para consulta administrativa.');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+            </form>
+            {% endif %}
+          </td>
+          {% endif %}
+        </tr>
+        {% else %}
+        <tr><td colspan="{{ 7 if pode('administrar_registros') else 6 }}" class="text-center text-muted py-4">
+          {% if filtrado %}Nenhum registro encontrado para os filtros informados.{% else %}Ainda não há acessos registrados.{% endif %}
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% if tem_mais %}
+<p class="small text-muted mt-2">Mostrando os {{ limite }} registros mais recentes. Use os filtros para refinar a busca.</p>
+{% endif %}
+{% endblock %}
