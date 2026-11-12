@@ -1,117 +1,133 @@
-# 🏢 Sistema de Controle de Portaria
+# Código-fonte — Sistema de Controle de Portaria
 
-**Organização, segurança e rastreabilidade no controle de acessos.**
+## Como executar (Windows)
 
-Projeto acadêmico desenvolvido para a disciplina de **Análise e Projeto de Sistemas**, com o objetivo de organizar e facilitar o controle de entrada e saída de pessoas e veículos.
+Requisito: Python 3.10 ou superior.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-yellow" alt="Status: Em desenvolvimento">
-  <img src="https://img.shields.io/badge/Documenta%C3%A7%C3%A3o-UML-blue" alt="Documentação UML">
-  <img src="https://img.shields.io/badge/Projeto-Acad%C3%AAmico-purple" alt="Projeto acadêmico">
-</p>
+```
+cd sistema
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python run.py
+```
 
----
+Abra http://127.0.0.1:5000 no navegador.
 
-## 📑 Índice
+## Estrutura
 
-- [Sobre o projeto](#-sobre-o-projeto)
-- [Objetivos](#-objetivos)
-- [Funcionalidades previstas](#-funcionalidades-previstas)
-- [Diagramas UML](#-diagramas-uml)
-- [Documentação](#-documentação)
-- [Demonstração do sistema](#-demonstração-do-sistema)
-- [Requisitos não funcionais](#-requisitos-não-funcionais)
-- [Regras de negócio](#-regras-de-negócio)
-- [Andamento do projeto](#-andamento-do-projeto)
-- [Estrutura do repositório](#-estrutura-do-repositório)
-- [Sobre o projeto acadêmico](#-sobre-o-projeto-acadêmico)
+- `app/routes/`: telas e ações de cada módulo
+- `app/services/`: regras de negócio e validações
+- `app/templates/`: páginas HTML
+- `app/static/`: CSS e JavaScript
+- `run.py`: inicia o sistema
 
----
+## Banco de dados
 
-## 📌 Sobre o projeto
+O banco é um arquivo SQLite (`instance/portaria.db`), criado a partir de `banco/schema.sql`.
+Na primeira execução do sistema ele é criado automaticamente. Também é possível criar manualmente:
 
-O **Sistema de Controle de Portaria** tem como objetivo organizar o registro e o acompanhamento da entrada e saída de pessoas e veículos em um ambiente controlado.
+```
+venv\Scripts\python.exe criar_banco.py             (cria, sem apagar dados)
+venv\Scripts\python.exe criar_banco.py --recriar   (APAGA tudo e cria de novo)
+```
 
-A proposta é centralizar as informações da portaria, facilitar a identificação de visitantes, registrar movimentações e permitir consultas ao histórico de acessos.
+Tabelas: `perfil`, `pessoa`, `usuario`, `veiculo`, `visitante`, `autorizacao`,
+`registro_acesso`, `ocorrencia`, `ocorrencia_pessoa`.
 
-Este repositório reúne a documentação, os diagramas UML e os demais materiais desenvolvidos durante o planejamento e a implementação do sistema.
+## Testes
 
-> **Status atual:** o projeto está em desenvolvimento. A documentação, os diagramas UML e a implementação serão atualizados conforme o andamento do trabalho.
+```
+venv\Scripts\python.exe -m unittest discover tests -v
+```
 
-## 🎯 Objetivos
+## Primeiro acesso (login)
 
-- Melhorar o controle de acesso de pessoas e veículos.
-- Registrar entradas, saídas e ocorrências.
-- Organizar os dados de moradores, funcionários e visitantes.
-- Permitir o registro de autorizações de visitantes.
-- Facilitar a consulta ao histórico de acessos.
-- Apoiar a geração de relatórios de movimentação.
+O sistema exige login. Antes de entrar pela primeira vez, crie o administrador:
 
-## ⚙️ Funcionalidades previstas
+```
+venv\Scripts\python.exe criar_admin.py
+```
 
-As funcionalidades abaixo representam os requisitos funcionais planejados para o sistema. Sua implementação será confirmada conforme o desenvolvimento e a realização dos testes.
+O script pergunta o login e a senha (mínimo de 6 caracteres). Depois rode
+`venv\Scripts\python.exe run.py` e entre em http://127.0.0.1:5000.
 
-| Código | Funcionalidade | Descrição |
-|:---:|---|---|
-| RF-01 | Cadastro de moradores e funcionários | Permitir o registro e a organização dos dados das pessoas cadastradas. |
-| RF-02 | Cadastro de veículos | Registrar os veículos relacionados aos usuários do sistema. |
-| RF-03 | Entrada de pessoas | Registrar a entrada de pessoas no ambiente controlado. |
-| RF-04 | Saída de pessoas | Registrar a saída de pessoas do ambiente controlado. |
-| RF-05 | Cadastro de visitantes | Registrar os dados necessários para a identificação dos visitantes. |
-| RF-06 | Autorização de visitantes | Registrar e consultar as autorizações de entrada de visitantes. |
-| RF-07 | Entrada e saída de veículos | Registrar a movimentação de veículos na portaria. |
-| RF-08 | Histórico de acessos | Permitir consultas às movimentações registradas. |
-| RF-09 | Registro de ocorrências | Registrar situações relevantes identificadas durante a operação da portaria. |
-| RF-10 | Relatórios de acessos | Apoiar a geração de relatórios das movimentações realizadas. |
+O administrador cadastra os demais usuários no menu **Usuários**.
 
-**Importante:** os requisitos representam funcionalidades previstas, não funcionalidades já implementadas ou testadas.
+## Painel inicial (dashboard)
 
-## 📐 Diagramas UML
+Depois do login, a página **Início** mostra os números atuais, lidos do banco de dados:
 
-Os diagramas UML auxiliam na visualização da estrutura e do comportamento planejado para o sistema.
+- Pessoas cadastradas (por tipo), veículos, visitantes e autorizações aguardando decisão.
+- Movimentações de hoje (entradas, saídas e ocorrências) e quem está **dentro agora**.
+- As últimas movimentações, com link para o histórico completo.
+- Botões de atalho conforme o perfil. O perfil **Funcionário** não vê dados.
 
-### Diagrama de Casos de Uso
+Cadastros desativados e registros excluídos não entram nas contagens.
 
-Representa os atores envolvidos e suas interações com o Sistema de Controle de Portaria.
+## Cadastro de pessoas e veículos
 
-**Arquivos:**
+No menu lateral, **Pessoas** e **Veículos** (administrador e porteiro):
 
-- 🖼️ [Visualizar diagrama de casos de uso (PNG)](diagramas/Diagrama_Casos_de_Uso_Portaria.png)
-- ✏️ [Abrir arquivo editável (diagrams.net)](diagramas/Diagrama_Casos_de_Uso_Portaria.drawio)
+- Cadastre primeiro a pessoa e depois o veículo, escolhendo o proprietário.
+- O CPF e a placa não podem se repetir. O CPF pode ser digitado com ou sem pontos e traço;
+  a placa aceita `ABC-1234` e `ABC1D23` (maiúsculas ou minúsculas).
+- Use a caixa de busca para achar pessoas (nome ou CPF) e veículos (placa, modelo ou proprietário).
+- Cadastros não são apagados: use **Desativar**, para que o histórico de acessos seja preservado.
 
-### Diagrama de Classes
+## Visitantes e autorizações
 
-Representa as classes do sistema, seus atributos, métodos e relacionamentos.
+- **Porteiro:** menu **Visitantes** > *Novo visitante*. A solicitação fica "aguardando autorização".
+- **Aprovador (gerente):** menu **Autorizações** > *Analisar*. Escolha **Autorizar** (com a data inicial
+  e, se quiser, a data final) ou **Negar**. A decisão fica registrada e não pode ser desfeita.
+- Se o visitante voltar outro dia, o porteiro usa **Nova solicitação** na lista de visitantes.
+- A autorização é conferida na hora da entrada (veja a seção abaixo).
 
-**Arquivos:**
+## Entrada e saída
 
-- 🖼️ [Visualizar diagrama de classes (PNG)](diagramas/Diagrama_de_Classes_Portaria.png)
-- ✏️ [Abrir arquivo editável (diagrams.net)](diagramas/Diagrama_de_Classes_Portaria.drawio)
+No menu **Entrada e saída** (porteiro e administrador):
 
-Para editar os arquivos `.drawio`, utilize o [diagrams.net](https://app.diagrams.net/).
+- Escolha a pessoa, o visitante ou o veículo e clique em **Registrar entrada**. A data e a hora são gravadas automaticamente.
+- **Visitante:** só entra com autorização válida para hoje. Se estiver aguardando, negada, ainda sem data
+  de início ou vencida, o sistema bloqueia e explica o motivo.
+- Quem já está dentro aparece na tabela **Dentro agora**; use **Registrar saída** quando sair.
+- Os registros nunca são apagados, a saída só completa o horário.
 
-> Os links acima utilizam os caminhos planejados para os arquivos. Caso algum arquivo ainda não esteja no repositório, o link ficará indisponível até que ele seja adicionado.
+## Histórico de acessos
 
-## 📚 Documentação
+No menu **Histórico** (administrador, porteiro e aprovador):
 
-Esta seção reúne os documentos utilizados para descrever e organizar o projeto.
+- Preencha um ou mais filtros (nome, CPF, placa, data inicial e final, tipo de acesso) e clique em **Pesquisar**. Sem filtros, aparecem os registros mais recentes (no máximo 200).
+- O nome também encontra o proprietário de um veículo. A consulta não altera nada.
+- **Só o administrador** vê os botões **Editar** (corrige a observação) e **Excluir**. A exclusão é lógica: o registro continua guardado e o administrador o enxerga marcado como "Excluído".
 
-| Documento | Descrição | Acesso |
-|---|---|---|
-| Casos de Uso Textuais | Descrição dos casos de uso e das interações previstas com o sistema. | [Acessar documento](documentacao/Casos_de_Uso_Textuais.md) |
-| Documentação Completa em PDF | Documento consolidado do projeto, com requisitos, modelagem e registros da implementação. | [Acessar PDF](documentacao/Projeto_Portaria.pdf) |
-| Organização da Documentação | Orientações e estrutura dos arquivos de documentação. | [Acessar README](documentacao/README.md) |
+## Ocorrências
 
-**Sobre o PDF final:** a versão completa será disponibilizada após a implementação do sistema. O documento deverá incluir capturas de tela reais das funcionalidades em funcionamento, além da documentação consolidada do projeto.
+No menu **Ocorrências** (administrador e porteiro):
 
-## 🎥 Demonstração do sistema
+- Clique em **Nova ocorrência**, confira a data e o horário (já vêm preenchidos), escreva a descrição e marque as pessoas envolvidas, se houver.
+- Use o filtro de datas para ver as ocorrências de um período.
+- Só o administrador edita ou exclui ocorrências (exclusão lógica).
 
-O vídeo de demonstração apresentará o funcionamento do Sistema de Controle de Portaria após a implementação das funcionalidades.
+## Relatórios
 
-📁 **[Acessar a seção de demonstração](video/README.md)**
+No menu **Relatórios** (somente administrador):
 
-O vídeo será gravado após a implementação e terá **duração máxima de um minuto**, apresentando de forma objetiva as principais funcionalidades desenvolvidas.
+- Escolha a data inicial e a final (ou use **Últimos 7 dias** / **Últimos 30 dias**) e clique em **Gerar relatório**.
+  Ao abrir a tela, o período vem preenchido do primeiro dia do mês até hoje.
+- O resumo mostra entradas por tipo, saídas, entradas ainda sem saída, visitantes e veículos diferentes,
+  autorizações (autorizadas, negadas e pendentes) e ocorrências do período.
+- Logo abaixo aparecem a lista de entradas e saídas e a lista de ocorrências.
+- **Baixar CSV** gera um arquivo que abre direto no Excel; **Imprimir** imprime só o relatório (sem o menu).
+- Registros e ocorrências excluídos não entram no relatório. O período máximo é de 366 dias.
 
-Até a conclusão dessa etapa, o vídeo permanece pendente.
+## Perfis e permissões
 
-## 🛡️ Requisitos não funcionais
+| Perfil | O que pode fazer (nesta versão e nas próximas) |
+|---|---|
+| Administrador | Tudo: usuários, cadastros, acessos, autorizações, ocorrências, relatórios |
+| Porteiro | Cadastros, visitantes, entradas e saídas, histórico e ocorrências |
+| Aprovador (Gerente) | Autorizar/negar visitantes e consultar o histórico |
+| Funcionário | Apenas entra no sistema (sem operações) |
+
+As regras ficam em `app/permissoes.py`.

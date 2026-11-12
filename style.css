@@ -1,0 +1,18 @@
+.sidebar { width: 220px; min-height: 100vh; }
+main { background: #f5f6fa; min-height: 100vh; }
+.login-caixa { max-width: 380px; width: 100%; }
+.form-caixa { max-width: 560px; }
+
+/* Dashboard: cartões de indicadores com uma faixa colorida à esquerda */
+.card-indicador { border-left: 4px solid #0d6efd; }
+.card-indicador.borda-escura { border-left-color: #212529; }
+.card-indicador.borda-ciano { border-left-color: #0dcaf0; }
+.card-indicador.borda-verde { border-left-color: #198754; }
+.texto-longo { white-space: pre-wrap; }
+
+/* Impressão do relatório: só o conteúdo, sem menu e sem botões */
+@media print {
+  .sidebar, .nao-imprimir, .alert { display: none !important; }
+  main { background: #fff; padding: 0 !important; }
+  .card { box-shadow: none !important; }
+}
