@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Entrar — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<div class="login-caixa mx-auto">
+  <div class="text-center mb-4">
+    <div class="login-icone mx-auto mb-3" aria-hidden="true">🚪</div>
+    <h1 class="h4 mb-1">Sistema de Controle de Portaria</h1>
+    <p class="text-muted small mb-0">Entre com seu usuário e senha</p>
+  </div>
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <form method="post" action="{{ url_for('auth.login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% if proxima %}<input type="hidden" name="proxima" value="{{ proxima }}">{% endif %}
+        <div class="mb-3">
+          <label for="login" class="form-label">Login</label>
+          <input type="text" class="form-control" id="login" name="login" value="{{ login }}" autocomplete="username" autofocus required>
+        </div>
+        <div class="mb-3">
+          <label for="senha" class="form-label">Senha</label>
+          <input type="password" class="form-control" id="senha" name="senha" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+      </form>
+    </div>
+  </div>
+  <p class="text-center text-muted small mt-3">Versão {{ versao }}</p>
+</div>
+{% endblock %}

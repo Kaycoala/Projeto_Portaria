@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block titulo %}Usuários — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">Usuários</h1>
+  <a class="btn btn-primary" href="{{ url_for('usuarios.novo') }}">Novo usuário</a>
+</div>
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Login</th><th>Perfil</th><th>Pessoa vinculada</th><th>Situação</th><th class="text-end">Ações</th></tr>
+      </thead>
+      <tbody>
+        {% for u in usuarios %}
+        <tr>
+          <td>{{ u.login }}</td>
+          <td>{{ u.perfil|nome_perfil }}</td>
+          <td>{{ u.pessoa_nome or '—' }}</td>
+          <td>
+            {% if u.ativo %}<span class="badge text-bg-success">Ativo</span>
+            {% else %}<span class="badge text-bg-secondary">Inativo</span>{% endif %}
+          </td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('usuarios.editar', usuario_id=u.id) }}">Editar</a>
+            <form method="post" action="{{ url_for('usuarios.alternar', usuario_id=u.id) }}" class="d-inline"
+                  onsubmit="return confirm('{{ 'Desativar' if u.ativo else 'Ativar' }} o usuário {{ u.login }}?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm {{ 'btn-outline-danger' if u.ativo else 'btn-outline-success' }}">
+                {{ 'Desativar' if u.ativo else 'Ativar' }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

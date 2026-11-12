@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block titulo %}Veículos — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">Veículos</h1>
+  <a class="btn btn-primary" href="{{ url_for('veiculos.novo') }}">Novo veículo</a>
+</div>
+<form method="get" class="row g-2 mb-3">
+  <div class="col-sm-8 col-md-6">
+    <input type="search" class="form-control" name="busca" value="{{ busca }}"
+           placeholder="Buscar por placa, modelo ou proprietário" aria-label="Buscar veículos">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+    {% if busca %}<a class="btn btn-outline-secondary" href="{{ url_for('veiculos.listar') }}">Limpar</a>{% endif %}
+  </div>
+</form>
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Placa</th><th>Modelo</th><th>Cor</th><th>Proprietário</th><th>Situação</th><th class="text-end">Ações</th></tr>
+      </thead>
+      <tbody>
+        {% for v in veiculos %}
+        <tr>
+          <td class="fw-semibold">{{ v.placa|formatar_placa }}</td>
+          <td>{{ v.modelo }}</td>
+          <td>{{ v.cor }}</td>
+          <td>{{ v.proprietario }}{% if not v.proprietario_ativo %} <span class="badge text-bg-secondary">inativo</span>{% endif %}</td>
+          <td>
+            {% if v.ativo %}<span class="badge text-bg-success">Ativo</span>
+            {% else %}<span class="badge text-bg-secondary">Inativo</span>{% endif %}
+          </td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('veiculos.editar', veiculo_id=v.id) }}">Editar</a>
+            <form method="post" action="{{ url_for('veiculos.alternar', veiculo_id=v.id) }}" class="d-inline"
+                  onsubmit="return confirm('{{ 'Desativar' if v.ativo else 'Ativar' }} o veículo {{ v.placa|formatar_placa }}?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm {{ 'btn-outline-danger' if v.ativo else 'btn-outline-success' }}">
+                {{ 'Desativar' if v.ativo else 'Ativar' }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">
+          {% if busca %}Nenhum veículo encontrado para "{{ busca }}".{% else %}Nenhum veículo cadastrado ainda.{% endif %}
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

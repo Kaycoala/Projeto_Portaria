@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block titulo %}Visitantes — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">Visitantes</h1>
+  <a class="btn btn-primary" href="{{ url_for('visitantes.novo') }}">Novo visitante</a>
+</div>
+<form method="get" class="row g-2 mb-3">
+  <div class="col-sm-8 col-md-6">
+    <input type="search" class="form-control" name="busca" value="{{ busca }}"
+           placeholder="Buscar por nome ou CPF" aria-label="Buscar por nome ou CPF">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+    {% if busca %}<a class="btn btn-outline-secondary" href="{{ url_for('visitantes.listar') }}">Limpar</a>{% endif %}
+  </div>
+</form>
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Visitante</th><th>CPF</th><th>Visita a</th><th>Motivo</th><th>Autorização</th><th class="text-end">Ações</th></tr>
+      </thead>
+      <tbody>
+        {% for v in visitantes %}
+        <tr>
+          <td>{{ v.nome }}<div class="small text-muted">{{ v.telefone or '' }}</div></td>
+          <td>{{ v.cpf|formatar_cpf }}</td>
+          <td>{{ v.visitado_nome }}</td>
+          <td>{{ v.motivo }}</td>
+          <td>
+            {% if v.status == 'aprovada' %}<span class="badge text-bg-success">Autorizada</span>
+              <div class="small text-muted">
+                {{ v.data_inicio|data_br }}{% if v.data_fim != v.data_inicio %} a {{ v.data_fim|data_br }}{% endif %}
+              </div>
+            {% elif v.status == 'negada' %}<span class="badge text-bg-danger">Negada</span>
+              {% if v.observacao %}<div class="small text-muted">{{ v.observacao }}</div>{% endif %}
+            {% else %}<span class="badge text-bg-warning">Aguardando autorização</span>{% endif %}
+          </td>
+          <td class="text-end">
+            {% if v.status != 'pendente' %}
+            <form method="post" action="{{ url_for('visitantes.solicitar', visitante_id=v.id) }}" class="d-inline"
+                  onsubmit="return confirm('Enviar nova solicitação de autorização para este visitante?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-outline-secondary">Nova solicitação</button>
+            </form>
+            {% endif %}
+            {% if pode('administrar_registros') %}
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('visitantes.editar', visitante_id=v.id) }}">Editar</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">
+          {% if busca %}Nenhum visitante encontrado para "{{ busca }}".{% else %}Nenhum visitante cadastrado ainda.{% endif %}
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
