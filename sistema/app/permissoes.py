@@ -10,6 +10,7 @@ PORTEIRO = "porteiro"
 FUNCIONARIO = "funcionario"
 
 PERMISSOES = {
+    "ver_painel":           {ADM, PORTEIRO, APROVADOR},  # números do dashboard
     "gerenciar_usuarios":   {ADM},
     "gerenciar_cadastros":  {ADM, PORTEIRO},             # pessoas e veículos
     "cadastrar_visitantes": {ADM, PORTEIRO},

@@ -33,6 +33,9 @@
         {% if pode('registrar_ocorrencia') %}
         <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('ocorrencias.listar') }}">Ocorrências</a></li>
         {% endif %}
+        {% if pode('ver_relatorios') %}
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('relatorios.gerar') }}">Relatórios</a></li>
+        {% endif %}
         {% if pode('gerenciar_usuarios') %}
         <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('usuarios.listar') }}">Usuários</a></li>
         {% endif %}

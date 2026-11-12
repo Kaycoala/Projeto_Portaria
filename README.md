@@ -8,6 +8,9 @@ Projeto acadêmico desenvolvido para a disciplina de **Análise e Projeto de Sis
   <img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-yellow" alt="Status: Em desenvolvimento">
   <img src="https://img.shields.io/badge/Documenta%C3%A7%C3%A3o-UML-blue" alt="Documentação UML">
   <img src="https://img.shields.io/badge/Projeto-Acad%C3%AAmico-purple" alt="Projeto acadêmico">
+  <img src="https://img.shields.io/badge/Vers%C3%A3o-0.8.0-green" alt="Versão 0.8.0">
+  <img src="https://img.shields.io/badge/Python-Flask-informational" alt="Python e Flask">
+  <img src="https://img.shields.io/badge/Banco-SQLite-lightgrey" alt="SQLite">
 </p>
 
 ---
@@ -16,9 +19,10 @@ Projeto acadêmico desenvolvido para a disciplina de **Análise e Projeto de Sis
 
 - [Sobre o projeto](#-sobre-o-projeto)
 - [Objetivos](#-objetivos)
-- [Funcionalidades previstas](#-funcionalidades-previstas)
+- [Funcionalidades](#-funcionalidades)
 - [Diagramas UML](#-diagramas-uml)
 - [Documentação](#-documentação)
+- [Como executar](#-como-executar)
 - [Demonstração do sistema](#-demonstração-do-sistema)
 - [Requisitos não funcionais](#-requisitos-não-funcionais)
 - [Regras de negócio](#-regras-de-negócio)
@@ -36,7 +40,7 @@ A proposta é centralizar as informações da portaria, facilitar a identificaç
 
 Este repositório reúne a documentação, os diagramas UML e os demais materiais desenvolvidos durante o planejamento e a implementação do sistema.
 
-> **Status atual:** o projeto está em desenvolvimento. A documentação, os diagramas UML e a implementação serão atualizados conforme o andamento do trabalho.
+> **Status atual:** versão **0.8.0**. Os requisitos funcionais RF-01 a RF-10 estão implementados e cobertos por testes automatizados. As próximas versões tratam de melhorias na interface (0.9.0) e da entrega final com prints, vídeo e PDF (1.0.0). Veja o [CHANGELOG](CHANGELOG.md).
 
 ## 🎯 Objetivos
 
@@ -47,71 +51,142 @@ Este repositório reúne a documentação, os diagramas UML e os demais materiai
 - Facilitar a consulta ao histórico de acessos.
 - Apoiar a geração de relatórios de movimentação.
 
-## ⚙️ Funcionalidades previstas
+## ⚙️ Funcionalidades
 
-As funcionalidades abaixo representam os requisitos funcionais planejados para o sistema. Sua implementação será confirmada conforme o desenvolvimento e a realização dos testes.
+| Código | Funcionalidade | Situação | Onde fica no sistema |
+|:---:|---|:---:|---|
+| RF-01 | Cadastro de moradores e funcionários | ✅ Implementado e testado | Menu **Pessoas** |
+| RF-02 | Cadastro de veículos | ✅ Implementado e testado | Menu **Veículos** |
+| RF-03 | Entrada de pessoas | ✅ Implementado e testado | Menu **Entrada e saída** |
+| RF-04 | Saída de pessoas | ✅ Implementado e testado | Menu **Entrada e saída** |
+| RF-05 | Cadastro de visitantes | ✅ Implementado e testado | Menu **Visitantes** |
+| RF-06 | Autorização de visitantes | ✅ Implementado e testado | Menu **Autorizações** |
+| RF-07 | Entrada e saída de veículos | ✅ Implementado e testado | Menu **Entrada e saída** |
+| RF-08 | Histórico de acessos | ✅ Implementado e testado | Menu **Histórico** |
+| RF-09 | Registro de ocorrências | ✅ Implementado e testado | Menu **Ocorrências** |
+| RF-10 | Relatórios de acessos | ✅ Implementado e testado | Menu **Relatórios** (tela, CSV e impressão) |
 
-| Código | Funcionalidade | Descrição |
-|:---:|---|---|
-| RF-01 | Cadastro de moradores e funcionários | Permitir o registro e a organização dos dados das pessoas cadastradas. |
-| RF-02 | Cadastro de veículos | Registrar os veículos relacionados aos usuários do sistema. |
-| RF-03 | Entrada de pessoas | Registrar a entrada de pessoas no ambiente controlado. |
-| RF-04 | Saída de pessoas | Registrar a saída de pessoas do ambiente controlado. |
-| RF-05 | Cadastro de visitantes | Registrar os dados necessários para a identificação dos visitantes. |
-| RF-06 | Autorização de visitantes | Registrar e consultar as autorizações de entrada de visitantes. |
-| RF-07 | Entrada e saída de veículos | Registrar a movimentação de veículos na portaria. |
-| RF-08 | Histórico de acessos | Permitir consultas às movimentações registradas. |
-| RF-09 | Registro de ocorrências | Registrar situações relevantes identificadas durante a operação da portaria. |
-| RF-10 | Relatórios de acessos | Apoiar a geração de relatórios das movimentações realizadas. |
-
-**Importante:** os requisitos representam funcionalidades previstas, não funcionalidades já implementadas ou testadas.
+Além disso, a página inicial tem um **dashboard** com os números atuais da portaria, lidos do banco de dados.
+O passo a passo de uso de cada tela está no [README do sistema](sistema/README.md).
 
 ## 📐 Diagramas UML
-
-Os diagramas UML auxiliam na visualização da estrutura e do comportamento planejado para o sistema.
 
 ### Diagrama de Casos de Uso
 
 Representa os atores envolvidos e suas interações com o Sistema de Controle de Portaria.
 
-**Arquivos:**
-
-- 🖼️ [Visualizar diagrama de casos de uso (PNG)](diagramas/Diagrama_Casos_de_Uso_Portaria.png)
+- 🖼️ [Visualizar diagrama de casos de uso (JPG)](diagramas/Diagrama_Casos_de_Uso_Portaria.jpg)
 - ✏️ [Abrir arquivo editável (diagrams.net)](diagramas/Diagrama_Casos_de_Uso_Portaria.drawio)
 
 ### Diagrama de Classes
 
 Representa as classes do sistema, seus atributos, métodos e relacionamentos.
 
-**Arquivos:**
-
-- 🖼️ [Visualizar diagrama de classes (PNG)](diagramas/Diagrama_de_Classes_Portaria.png)
+- 🖼️ [Visualizar diagrama de classes (JPG)](diagramas/Diagrama_de_Classes_Portaria.jpg)
 - ✏️ [Abrir arquivo editável (diagrams.net)](diagramas/Diagrama_de_Classes_Portaria.drawio)
 
 Para editar os arquivos `.drawio`, utilize o [diagrams.net](https://app.diagrams.net/).
 
-> Os links acima utilizam os caminhos planejados para os arquivos. Caso algum arquivo ainda não esteja no repositório, o link ficará indisponível até que ele seja adicionado.
-
 ## 📚 Documentação
-
-Esta seção reúne os documentos utilizados para descrever e organizar o projeto.
 
 | Documento | Descrição | Acesso |
 |---|---|---|
-| Casos de Uso Textuais | Descrição dos casos de uso e das interações previstas com o sistema. | [Acessar documento](documentacao/Casos_de_Uso_Textuais.md) |
-| Documentação Completa em PDF | Documento consolidado do projeto, com requisitos, modelagem e registros da implementação. | [Acessar PDF](documentacao/Projeto_Portaria.pdf) |
-| Organização da Documentação | Orientações e estrutura dos arquivos de documentação. | [Acessar README](documentacao/README.md) |
+| Requisitos do sistema | Requisitos funcionais, não funcionais e regras de negócio. | [Abrir DOCX](documentacao/requisitos%20do%20sistema.docx) |
+| Casos de uso textuais | UC01 Registrar entrada, UC02 Autorizar visitante e UC03 Consultar histórico. | [Abrir PDF](documentacao/Casos_de_Uso_Sistema_Controle_de_Portaria.pdf) |
+| Manual do sistema | Como instalar, executar, testar e usar cada tela. | [README do sistema](sistema/README.md) |
+| Histórico de versões | O que foi feito em cada versão. | [CHANGELOG](CHANGELOG.md) |
+| Documentação completa em PDF | Documento consolidado com requisitos, modelagem e prints reais. | ⏳ Pendente (versão 1.0.0) |
 
-**Sobre o PDF final:** a versão completa será disponibilizada após a implementação do sistema. O documento deverá incluir capturas de tela reais das funcionalidades em funcionamento, além da documentação consolidada do projeto.
+## 🚀 Como executar
+
+Requisito: Python 3.10 ou superior. No Windows:
+
+```
+cd sistema
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python criar_admin.py
+python run.py
+```
+
+Abra http://127.0.0.1:5000 e entre com o administrador criado. Para rodar os testes automatizados:
+
+```
+python -m unittest discover tests -v
+```
 
 ## 🎥 Demonstração do sistema
 
-O vídeo de demonstração apresentará o funcionamento do Sistema de Controle de Portaria após a implementação das funcionalidades.
+O vídeo terá **duração máxima de um minuto** e mostrará as principais funcionalidades funcionando.
 
-📁 **[Acessar a seção de demonstração](video/README.md)**
-
-O vídeo será gravado após a implementação e terá **duração máxima de um minuto**, apresentando de forma objetiva as principais funcionalidades desenvolvidas.
-
-Até a conclusão dessa etapa, o vídeo permanece pendente.
+⏳ **Pendente (versão 1.0.0).** Mais detalhes na [pasta do vídeo](video/README.md).
 
 ## 🛡️ Requisitos não funcionais
+
+| Código | Requisito | Situação |
+|:---:|---|---|
+| RNF-01 | Tempo de resposta de até 2 segundos | Consultas com índices no banco, limite de 200 linhas no histórico e relatórios de no máximo 366 dias. |
+| RNF-02 | Autenticação por usuário e senha | Todas as telas exigem login; senhas guardadas com hash; formulários protegidos. |
+| RNF-03 | Disponibilidade durante o funcionamento da portaria | Sistema leve (Flask + SQLite) que roda em um único computador, sem depender de internet. |
+| RNF-04 | Acesso conforme o perfil | Permissões centralizadas em `sistema/app/permissoes.py`; páginas proibidas respondem com erro 403 e o menu mostra só o permitido. |
+| RNF-05 | Backup a cada 24 horas | ⏳ Ainda não implementado. |
+
+## 📏 Regras de negócio
+
+| Código | Regra | Como foi atendida |
+|:---:|---|---|
+| RN-01 | Cadastro obrigatório | Só pessoas cadastradas e ativas podem ter a entrada registrada. |
+| RN-02 | Registro de entrada com data e hora | Data e hora são gravadas automaticamente pelo sistema. |
+| RN-03 | Visitante autorizado | A entrada do visitante só é liberada com autorização válida para o dia. |
+| RN-04 | Registro de saída | Quem está dentro aparece em **Dentro agora** até a saída ser registrada. |
+| RN-05 | Acesso restrito para alterar ou excluir | Só o administrador edita ou exclui acessos e ocorrências. |
+| RN-06 | CPF único | Verificado na validação e garantido no banco (`UNIQUE`). |
+| RN-07 | Placa única | Verificado na validação e garantido no banco (`UNIQUE`). |
+| RN-08 | Histórico preservado | Exclusão lógica: o registro continua guardado e visível ao administrador. |
+| RN-09 | Visitante sem autorização aguarda | Toda solicitação começa "aguardando autorização" e é bloqueada na portaria até a decisão. |
+| RN-10 | Ocorrência com data, hora e descrição | Campos obrigatórios na tela e no banco. |
+
+## 📈 Andamento do projeto
+
+- [x] 0.1.0 — Estrutura inicial
+- [x] 0.2.0 — Banco de dados
+- [x] 0.3.0 — Autenticação e usuários
+- [x] 0.4.0 — Pessoas e veículos
+- [x] 0.5.0 — Visitantes e autorizações
+- [x] 0.6.0 — Entrada e saída
+- [x] 0.7.0 — Histórico e ocorrências
+- [x] 0.8.0 — Dashboard e relatórios
+- [ ] 0.9.0 — Interface e melhorias
+- [ ] 1.0.0 — Primeira versão estável (prints, vídeo e PDF final)
+
+O detalhe de cada versão está no [CHANGELOG](CHANGELOG.md) e nos commits do repositório.
+
+## 🗂️ Estrutura do repositório
+
+```
+Projeto_Portaria/
+├── README.md              ← este arquivo
+├── CHANGELOG.md           ← histórico de versões
+├── .gitignore             ← impede o envio do banco e da chave secreta
+├── diagramas/             ← diagramas UML (JPG e .drawio)
+├── documentacao/          ← requisitos e casos de uso
+├── video/                 ← vídeo de demonstração
+└── sistema/               ← código-fonte
+    ├── app/
+    │   ├── routes/        ← telas e ações de cada módulo
+    │   ├── services/      ← regras de negócio e validações
+    │   ├── templates/     ← páginas HTML
+    │   ├── static/        ← CSS
+    │   ├── auth.py        ← login e proteção das páginas
+    │   └── permissoes.py  ← o que cada perfil pode fazer
+    ├── banco/             ← schema.sql e dados iniciais
+    ├── tests/             ← testes automatizados (unittest)
+    ├── criar_admin.py
+    ├── criar_banco.py
+    └── run.py
+```
+
+## 🎓 Sobre o projeto acadêmico
+
+Projeto desenvolvido em dupla para a disciplina de **Análise e Projeto de Sistemas**, percorrendo as etapas de levantamento de requisitos, modelagem UML, implementação e testes, com a evolução de cada versão registrada no GitHub.

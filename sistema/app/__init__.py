@@ -55,6 +55,7 @@ def create_app(config_teste=None):
     from app.routes.main import main_bp
     from app.routes.ocorrencias import ocorrencias_bp
     from app.routes.pessoas import pessoas_bp
+    from app.routes.relatorios import relatorios_bp
     from app.routes.usuarios import usuarios_bp
     from app.routes.veiculos import veiculos_bp
     from app.routes.visitantes import visitantes_bp
@@ -68,6 +69,7 @@ def create_app(config_teste=None):
     app.register_blueprint(acessos_bp)
     app.register_blueprint(historico_bp)
     app.register_blueprint(ocorrencias_bp)
+    app.register_blueprint(relatorios_bp)
 
     @app.errorhandler(400)
     def erro_400(e):

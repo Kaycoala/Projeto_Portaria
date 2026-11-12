@@ -54,6 +54,17 @@ O script pergunta o login e a senha (mínimo de 6 caracteres). Depois rode
 
 O administrador cadastra os demais usuários no menu **Usuários**.
 
+## Painel inicial (dashboard)
+
+Depois do login, a página **Início** mostra os números atuais, lidos do banco de dados:
+
+- Pessoas cadastradas (por tipo), veículos, visitantes e autorizações aguardando decisão.
+- Movimentações de hoje (entradas, saídas e ocorrências) e quem está **dentro agora**.
+- As últimas movimentações, com link para o histórico completo.
+- Botões de atalho conforme o perfil. O perfil **Funcionário** não vê dados.
+
+Cadastros desativados e registros excluídos não entram nas contagens.
+
 ## Cadastro de pessoas e veículos
 
 No menu lateral, **Pessoas** e **Veículos** (administrador e porteiro):
@@ -97,6 +108,18 @@ No menu **Ocorrências** (administrador e porteiro):
 - Clique em **Nova ocorrência**, confira a data e o horário (já vêm preenchidos), escreva a descrição e marque as pessoas envolvidas, se houver.
 - Use o filtro de datas para ver as ocorrências de um período.
 - Só o administrador edita ou exclui ocorrências (exclusão lógica).
+
+## Relatórios
+
+No menu **Relatórios** (somente administrador):
+
+- Escolha a data inicial e a final (ou use **Últimos 7 dias** / **Últimos 30 dias**) e clique em **Gerar relatório**.
+  Ao abrir a tela, o período vem preenchido do primeiro dia do mês até hoje.
+- O resumo mostra entradas por tipo, saídas, entradas ainda sem saída, visitantes e veículos diferentes,
+  autorizações (autorizadas, negadas e pendentes) e ocorrências do período.
+- Logo abaixo aparecem a lista de entradas e saídas e a lista de ocorrências.
+- **Baixar CSV** gera um arquivo que abre direto no Excel; **Imprimir** imprime só o relatório (sem o menu).
+- Registros e ocorrências excluídos não entram no relatório. O período máximo é de 366 dias.
 
 ## Perfis e permissões
 
