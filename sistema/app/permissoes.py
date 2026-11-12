@@ -20,6 +20,7 @@ PERMISSOES = {
     "registrar_ocorrencia": {ADM, PORTEIRO},
     "administrar_registros": {ADM},                      # alterar/excluir acessos, visitantes e ocorrências (RN-05, RN-08)
     "ver_relatorios":       {ADM},
+    "gerenciar_backup":     {ADM},                      # cópia de segurança do banco (RNF-05)
 }
 
 NOMES_PERFIL = {

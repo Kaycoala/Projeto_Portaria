@@ -5,8 +5,28 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 
 ## [Planejado]
 
-- **0.9.0 — Interface e melhorias:** ajustes visuais, navegação, responsividade, mensagens e correções.
 - **1.0.0 — Primeira versão estável:** testes gerais, README e documentação finais, prints, vídeo e PDF.
+
+## [0.9.0] — Interface e melhorias
+
+### Adicionado
+- Backup do banco de dados (RNF-05): script `backup.py` e tela **Backup** (somente administrador) com botão
+  "Fazer backup agora" e lista dos backups. Cada cópia é conferida antes de ser aceita e são guardados os 30 mais
+  recentes. A pasta `sistema/backups/` não vai para o GitHub (tem dados pessoais).
+- Aviso no painel inicial do administrador quando o último backup tem mais de 24 horas ou não existe.
+- Permissão `gerenciar_backup` (administrador).
+- Menu lateral responsivo: em celular e tablet vira uma gaveta aberta pelo botão "Menu"; em telas grandes fica
+  fixo ao lado, sem sumir ao rolar a página. A seção atual fica destacada.
+- Páginas de erro amigáveis para 405 (ação não permitida) e 500 (erro inesperado), sem detalhes técnicos na tela.
+- Mensagens de sucesso somem sozinhas depois de 6 segundos; mensagens de erro ficam até serem fechadas.
+- Proteção contra clique duplo nos formulários (evita registrar a mesma entrada duas vezes).
+- Testes automatizados de backup, navegação, menu, páginas de erro e qualidade dos templates.
+
+### Corrigido
+- O Bootstrap JavaScript não era carregado: o botão de fechar das mensagens não funcionava.
+- Campos de observação da tela de entrada e saída sem rótulo para leitores de tela.
+- Instruções de execução no Windows: passam a usar `venv\Scripts\python.exe`, que funciona mesmo quando o
+  PowerShell bloqueia o `activate`.
 
 ## [0.8.0] — Dashboard e relatórios
 

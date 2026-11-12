@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}Backup — Controle de Portaria{% endblock %}
+{% block conteudo %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h3 mb-0">Backup do banco de dados</h1>
+  <form method="post" action="{{ url_for('backup.fazer') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-primary">Fazer backup agora</button>
+  </form>
+</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    {% if situacao.ultimo and situacao.em_dia %}
+      <span class="badge text-bg-success">Em dia</span>
+      Último backup: <strong>{{ situacao.ultimo|data_br }}</strong> (menos de 24 horas).
+    {% elif situacao.ultimo %}
+      <span class="badge text-bg-warning">Atrasado</span>
+      O último backup foi em <strong>{{ situacao.ultimo|data_br }}</strong>, há mais de 24 horas.
+    {% else %}
+      <span class="badge text-bg-warning">Nenhum backup</span> Ainda não foi feito nenhum backup.
+    {% endif %}
+    <div class="small text-muted mt-2">
+      Os backups ficam na pasta <code>sistema/backups</code>, com os {{ manter }} mais recentes guardados.
+      Eles têm dados pessoais: copie a pasta para um pendrive ou serviço de nuvem de confiança, porque uma cópia
+      no mesmo computador não protege contra defeito no disco. Para restaurar, veja o README do sistema.
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light"><tr><th>Arquivo</th><th>Feito em</th><th>Tamanho</th></tr></thead>
+      <tbody>
+        {% for b in backups %}
+        <tr><td><code>{{ b.nome }}</code></td><td>{{ b.criado_em|data_br }}</td><td>{{ b.tamanho_texto }}</td></tr>
+        {% else %}
+        <tr><td colspan="3" class="text-center text-muted py-4">Nenhum backup encontrado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,7 +1,18 @@
-.sidebar { width: 220px; min-height: 100vh; }
-main { background: #f5f6fa; min-height: 100vh; }
+/* Menu lateral: fixo ao lado em telas grandes; em telas pequenas vira uma gaveta (offcanvas). */
+.sidebar { --bs-offcanvas-width: 250px; background-color: #212529 !important; color: #fff; }
+.sidebar .offcanvas-body { background-color: #212529 !important; }
+.sidebar .nav-link { border-radius: .375rem; margin-bottom: .125rem; }
+.sidebar .nav-link:hover { background-color: rgba(255, 255, 255, .1); }
+.sidebar .nav-link.active { background-color: rgba(255, 255, 255, .18); font-weight: 600; }
+@media (min-width: 992px) {
+  .sidebar { flex: 0 0 220px; width: 220px; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+             display: flex; flex-direction: column; }
+  .sidebar .offcanvas-body { flex: 1 1 auto !important; }
+}
+
+main { background: #f5f6fa; min-height: 100vh; min-width: 0; }  /* min-width: tabelas rolam em vez de esticar a página */
 .login-caixa { max-width: 380px; width: 100%; }
-.form-caixa { max-width: 560px; }
+.form-caixa { max-width: 560px; width: 100%; }
 
 /* Dashboard: cartões de indicadores com uma faixa colorida à esquerda */
 .card-indicador { border-left: 4px solid #0d6efd; }
@@ -10,9 +21,15 @@ main { background: #f5f6fa; min-height: 100vh; }
 .card-indicador.borda-verde { border-left-color: #198754; }
 .texto-longo { white-space: pre-wrap; }
 
+/* Telas pequenas: botões de ação nas tabelas ficam mais fáceis de tocar */
+@media (max-width: 575.98px) {
+  .table .btn-sm { padding: .4rem .6rem; }
+  h1.h3 { font-size: 1.35rem; }
+}
+
 /* Impressão do relatório: só o conteúdo, sem menu e sem botões */
 @media print {
-  .sidebar, .nao-imprimir, .alert { display: none !important; }
+  .sidebar, .topo-mobile, .nao-imprimir, .alert { display: none !important; }
   main { background: #fff; padding: 0 !important; }
   .card { box-shadow: none !important; }
 }

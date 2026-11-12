@@ -6,6 +6,15 @@
   <p class="text-muted mb-0">Bem-vindo, <strong>{{ usuario.login }}</strong>. Seu perfil: {{ usuario.perfil|nome_perfil }}.</p>
 </div>
 
+{% if aviso_backup %}
+<div class="alert alert-warning" id="aviso-backup">
+  <strong>Backup em atraso.</strong>
+  {% if aviso_backup.ultimo %}O último backup foi em {{ aviso_backup.ultimo|data_br }}, há mais de 24 horas.
+  {% else %}Ainda não foi feito nenhum backup.{% endif %}
+  <a class="alert-link" href="{{ url_for('backup.listar') }}">Fazer backup agora</a>
+</div>
+{% endif %}
+
 {% if not resumo %}
 <div class="alert alert-light border">Seu perfil não tem operações disponíveis no sistema. Em caso de dúvida, procure o administrador.</div>
 {% else %}

@@ -8,7 +8,7 @@ Projeto acadêmico desenvolvido para a disciplina de **Análise e Projeto de Sis
   <img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-yellow" alt="Status: Em desenvolvimento">
   <img src="https://img.shields.io/badge/Documenta%C3%A7%C3%A3o-UML-blue" alt="Documentação UML">
   <img src="https://img.shields.io/badge/Projeto-Acad%C3%AAmico-purple" alt="Projeto acadêmico">
-  <img src="https://img.shields.io/badge/Vers%C3%A3o-0.8.0-green" alt="Versão 0.8.0">
+  <img src="https://img.shields.io/badge/Vers%C3%A3o-0.9.0-green" alt="Versão 0.9.0">
   <img src="https://img.shields.io/badge/Python-Flask-informational" alt="Python e Flask">
   <img src="https://img.shields.io/badge/Banco-SQLite-lightgrey" alt="SQLite">
 </p>
@@ -40,7 +40,7 @@ A proposta é centralizar as informações da portaria, facilitar a identificaç
 
 Este repositório reúne a documentação, os diagramas UML e os demais materiais desenvolvidos durante o planejamento e a implementação do sistema.
 
-> **Status atual:** versão **0.8.0**. Os requisitos funcionais RF-01 a RF-10 estão implementados e cobertos por testes automatizados. As próximas versões tratam de melhorias na interface (0.9.0) e da entrega final com prints, vídeo e PDF (1.0.0). Veja o [CHANGELOG](CHANGELOG.md).
+> **Status atual:** versão **0.9.0**. Os requisitos funcionais RF-01 a RF-10 e o backup (RNF-05) estão implementados e cobertos por testes automatizados. A próxima versão é a entrega final, com prints, vídeo e PDF (1.0.0). Veja o [CHANGELOG](CHANGELOG.md).
 
 ## 🎯 Objetivos
 
@@ -104,16 +104,15 @@ Requisito: Python 3.10 ou superior. No Windows:
 ```
 cd sistema
 python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-python criar_admin.py
-python run.py
+venv\Scripts\python.exe -m pip install -r requirements.txt
+venv\Scripts\python.exe criar_admin.py
+venv\Scripts\python.exe run.py
 ```
 
 Abra http://127.0.0.1:5000 e entre com o administrador criado. Para rodar os testes automatizados:
 
 ```
-python -m unittest discover tests -v
+venv\Scripts\python.exe -m unittest discover tests -v
 ```
 
 ## 🎥 Demonstração do sistema
@@ -130,7 +129,7 @@ O vídeo terá **duração máxima de um minuto** e mostrará as principais func
 | RNF-02 | Autenticação por usuário e senha | Todas as telas exigem login; senhas guardadas com hash; formulários protegidos. |
 | RNF-03 | Disponibilidade durante o funcionamento da portaria | Sistema leve (Flask + SQLite) que roda em um único computador, sem depender de internet. |
 | RNF-04 | Acesso conforme o perfil | Permissões centralizadas em `sistema/app/permissoes.py`; páginas proibidas respondem com erro 403 e o menu mostra só o permitido. |
-| RNF-05 | Backup a cada 24 horas | ⏳ Ainda não implementado. |
+| RNF-05 | Backup a cada 24 horas | Script `sistema/backup.py` e tela **Backup** (administrador); o painel avisa quando o último backup passa de 24 horas. O agendamento diário é feito no Agendador de Tarefas do Windows (veja o [README do sistema](sistema/README.md)). |
 
 ## 📏 Regras de negócio
 
@@ -157,7 +156,7 @@ O vídeo terá **duração máxima de um minuto** e mostrará as principais func
 - [x] 0.6.0 — Entrada e saída
 - [x] 0.7.0 — Histórico e ocorrências
 - [x] 0.8.0 — Dashboard e relatórios
-- [ ] 0.9.0 — Interface e melhorias
+- [x] 0.9.0 — Interface e melhorias
 - [ ] 1.0.0 — Primeira versão estável (prints, vídeo e PDF final)
 
 O detalhe de cada versão está no [CHANGELOG](CHANGELOG.md) e nos commits do repositório.
@@ -177,11 +176,12 @@ Projeto_Portaria/
     │   ├── routes/        ← telas e ações de cada módulo
     │   ├── services/      ← regras de negócio e validações
     │   ├── templates/     ← páginas HTML
-    │   ├── static/        ← CSS
+    │   ├── static/        ← CSS e JavaScript
     │   ├── auth.py        ← login e proteção das páginas
     │   └── permissoes.py  ← o que cada perfil pode fazer
     ├── banco/             ← schema.sql e dados iniciais
     ├── tests/             ← testes automatizados (unittest)
+    ├── backup.py          ← cópia de segurança do banco
     ├── criar_admin.py
     ├── criar_banco.py
     └── run.py

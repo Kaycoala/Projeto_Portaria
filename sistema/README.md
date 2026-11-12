@@ -7,12 +7,13 @@ Requisito: Python 3.10 ou superior.
 ```
 cd sistema
 python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-python run.py
+venv\Scripts\python.exe -m pip install -r requirements.txt
+venv\Scripts\python.exe criar_admin.py
+venv\Scripts\python.exe run.py
 ```
 
-Abra http://127.0.0.1:5000 no navegador.
+Abra http://127.0.0.1:5000 no navegador. (Usamos `venv\Scripts\python.exe` direto, sem `activate`,
+porque o PowerShell costuma bloquear o `activate`.)
 
 ## Estrutura
 
@@ -21,6 +22,7 @@ Abra http://127.0.0.1:5000 no navegador.
 - `app/templates/`: páginas HTML
 - `app/static/`: CSS e JavaScript
 - `run.py`: inicia o sistema
+- `backup.py`: cria uma cópia de segurança do banco
 
 ## Banco de dados
 
@@ -121,11 +123,38 @@ No menu **Relatórios** (somente administrador):
 - **Baixar CSV** gera um arquivo que abre direto no Excel; **Imprimir** imprime só o relatório (sem o menu).
 - Registros e ocorrências excluídos não entram no relatório. O período máximo é de 366 dias.
 
+## Backup (RNF-05)
+
+O banco de dados é o arquivo `instance/portaria.db`. Os backups ficam na pasta `backups/` (ela não vai para o GitHub,
+porque tem dados pessoais).
+
+**Fazer um backup agora**
+- Pelo sistema: menu **Backup** (somente administrador) > **Fazer backup agora**.
+- Pelo terminal, dentro de `sistema`: `venv\Scripts\python.exe backup.py` (use `--manter 60` para guardar mais cópias;
+  o padrão é guardar as 30 mais recentes).
+
+**Todo dia, automaticamente (Windows)** — Agendador de Tarefas > *Criar Tarefa Básica* > *Diariamente* > *Iniciar um programa*:
+- Programa: o caminho completo de `sistema\venv\Scripts\python.exe`
+- Argumentos: o caminho completo de `sistema\backup.py`
+- Iniciar em: o caminho da pasta `sistema`
+
+Se o computador estiver desligado no horário, a tarefa pode ser configurada para rodar assim que ele ligar.
+Enquanto não houver backup das últimas 24 horas, o painel inicial do administrador mostra um aviso.
+
+**Guarde uma cópia fora do computador:** copie a pasta `backups` para um pendrive ou serviço de nuvem de confiança.
+Uma cópia só no mesmo computador não protege contra defeito no disco.
+
+**Restaurar um backup**
+1. Feche o sistema (`Ctrl+C` no terminal onde ele está rodando).
+2. Guarde uma cópia do `instance/portaria.db` atual em outro lugar, por segurança.
+3. Copie o backup escolhido para a pasta `instance/` e renomeie-o para `portaria.db`.
+4. Abra o sistema de novo.
+
 ## Perfis e permissões
 
 | Perfil | O que pode fazer (nesta versão e nas próximas) |
 |---|---|
-| Administrador | Tudo: usuários, cadastros, acessos, autorizações, ocorrências, relatórios |
+| Administrador | Tudo: usuários, cadastros, acessos, autorizações, ocorrências, relatórios, backup |
 | Porteiro | Cadastros, visitantes, entradas e saídas, histórico e ocorrências |
 | Aprovador (Gerente) | Autorizar/negar visitantes e consultar o histórico |
 | Funcionário | Apenas entra no sistema (sem operações) |

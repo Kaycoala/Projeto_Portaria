@@ -1,3 +1,12 @@
+{# Item do menu lateral: aparece só se o perfil tem a permissão e fica destacado na seção atual. #}
+{% macro item(permissao, endpoint, rotulo, secao) %}
+  {% if pode(permissao) %}
+  {% set ativo = (request.blueprint == secao) %}
+  <li class="nav-item">
+    <a class="nav-link text-white{{ ' active' if ativo }}" href="{{ url_for(endpoint) }}"{% if ativo %} aria-current="page"{% endif %}>{{ rotulo }}</a>
+  </li>
+  {% endif %}
+{% endmacro -%}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,52 +17,57 @@
   <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
-  <div class="d-flex">
+  {% if usuario %}
+  {# Em telas pequenas (celular/tablet) o menu vira uma gaveta aberta por este botão. #}
+  <header class="topo-mobile d-lg-none bg-dark text-white d-flex align-items-center px-3 py-2 nao-imprimir">
+    <button class="btn btn-outline-light btn-sm me-3" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#menu-lateral" aria-controls="menu-lateral">☰ Menu</button>
+    <span class="fw-semibold">Portaria</span>
+  </header>
+  {% endif %}
+  <div class="d-lg-flex">
     {% if usuario %}
-    <nav class="sidebar bg-dark text-white p-3 d-flex flex-column">
-      <h5 class="mb-4">Portaria</h5>
-      <ul class="nav flex-column mb-auto">
-        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('main.inicio') }}">Início</a></li>
-        {% if pode('registrar_acesso') %}
-        <li class="nav-item"><a class="nav-link text-white fw-semibold" href="{{ url_for('acessos.portaria') }}">Entrada e saída</a></li>
-        {% endif %}
-        {% if pode('gerenciar_cadastros') %}
-        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('pessoas.listar') }}">Pessoas</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('veiculos.listar') }}">Veículos</a></li>
-        {% endif %}
-        {% if pode('cadastrar_visitantes') %}
-        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('visitantes.listar') }}">Visitantes</a></li>
-        {% endif %}
-        {% if pode('autorizar_visitantes') %}
-        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('autorizacoes.listar') }}">Autorizações</a></li>
-        {% endif %}
-        {% if pode('consultar_historico') %}
-        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('historico.listar') }}">Histórico</a></li>
-        {% endif %}
-        {% if pode('registrar_ocorrencia') %}
-        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('ocorrencias.listar') }}">Ocorrências</a></li>
-        {% endif %}
-        {% if pode('ver_relatorios') %}
-        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('relatorios.gerar') }}">Relatórios</a></li>
-        {% endif %}
-        {% if pode('gerenciar_usuarios') %}
-        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('usuarios.listar') }}">Usuários</a></li>
-        {% endif %}
-      </ul>
-      <div class="border-top pt-3 small">
-        <div class="fw-semibold">{{ usuario.login }}</div>
-        <div class="text-white-50 mb-2">{{ usuario.perfil|nome_perfil }}</div>
-        <form method="post" action="{{ url_for('auth.logout') }}">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn btn-outline-light btn-sm w-100">Sair</button>
-        </form>
+    <nav id="menu-lateral" class="sidebar offcanvas-lg offcanvas-start bg-dark text-white" tabindex="-1"
+         aria-label="Menu principal">
+      <div class="offcanvas-header d-lg-none">
+        <h5 class="offcanvas-title">Portaria</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                data-bs-target="#menu-lateral" aria-label="Fechar menu"></button>
+      </div>
+      <div class="offcanvas-body p-3 d-flex flex-column">
+        <h5 class="mb-4 d-none d-lg-block">Portaria</h5>
+        <ul class="nav flex-column mb-auto">
+          <li class="nav-item">
+            <a class="nav-link text-white{{ ' active' if request.blueprint == 'main' }}" href="{{ url_for('main.inicio') }}"{% if request.blueprint == 'main' %} aria-current="page"{% endif %}>Início</a>
+          </li>
+          {{ item('registrar_acesso', 'acessos.portaria', 'Entrada e saída', 'acessos') }}
+          {{ item('gerenciar_cadastros', 'pessoas.listar', 'Pessoas', 'pessoas') }}
+          {{ item('gerenciar_cadastros', 'veiculos.listar', 'Veículos', 'veiculos') }}
+          {{ item('cadastrar_visitantes', 'visitantes.listar', 'Visitantes', 'visitantes') }}
+          {{ item('autorizar_visitantes', 'autorizacoes.listar', 'Autorizações', 'autorizacoes') }}
+          {{ item('consultar_historico', 'historico.listar', 'Histórico', 'historico') }}
+          {{ item('registrar_ocorrencia', 'ocorrencias.listar', 'Ocorrências', 'ocorrencias') }}
+          {{ item('ver_relatorios', 'relatorios.gerar', 'Relatórios', 'relatorios') }}
+          {{ item('gerenciar_usuarios', 'usuarios.listar', 'Usuários', 'usuarios') }}
+          {{ item('gerenciar_backup', 'backup.listar', 'Backup', 'backup') }}
+        </ul>
+        <div class="border-top pt-3 small">
+          <div class="fw-semibold">{{ usuario.login }}</div>
+          <div class="text-white-50 mb-2">{{ usuario.perfil|nome_perfil }}</div>
+          <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-outline-light btn-sm w-100">Sair</button>
+          </form>
+        </div>
       </div>
     </nav>
     {% endif %}
-    <main class="flex-grow-1 p-4">
+    <main class="flex-grow-1 p-3 p-md-4">
       {% include "_mensagens.html" %}
       {% block conteudo %}{% endblock %}
     </main>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

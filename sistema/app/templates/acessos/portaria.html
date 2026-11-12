@@ -14,7 +14,7 @@
             <option value="">Selecione a pessoa...</option>
             {% for p in pessoas %}<option value="{{ p.id }}">{{ p.nome }} ({{ p.tipo|nome_tipo }})</option>{% endfor %}
           </select>
-          <input type="text" class="form-control mb-2" name="observacao" placeholder="Observação (opcional)">
+          <input type="text" class="form-control mb-2" name="observacao" placeholder="Observação (opcional)" aria-label="Observação (opcional)">
           <button type="submit" class="btn btn-success w-100" {{ '' if pessoas else 'disabled' }}>Registrar entrada</button>
           {% if not pessoas %}<div class="form-text">Nenhuma pessoa disponível (cadastre ou verifique quem já está dentro).</div>{% endif %}
         </form>
@@ -33,7 +33,7 @@
             <option value="{{ v.id }}">{{ v.nome }} — {{ 'autorizado' if v.status == 'aprovada' else ('negado' if v.status == 'negada' else 'aguardando') }}</option>
             {% endfor %}
           </select>
-          <input type="text" class="form-control mb-2" name="observacao" placeholder="Observação (opcional)">
+          <input type="text" class="form-control mb-2" name="observacao" placeholder="Observação (opcional)" aria-label="Observação (opcional)">
           <button type="submit" class="btn btn-success w-100" {{ '' if visitantes else 'disabled' }}>Registrar entrada</button>
           <div class="form-text">Só entra quem tem autorização válida para hoje.</div>
         </form>
@@ -50,7 +50,7 @@
             <option value="">Selecione o veículo...</option>
             {% for v in veiculos %}<option value="{{ v.id }}">{{ v.placa|formatar_placa }} — {{ v.modelo }} ({{ v.proprietario }})</option>{% endfor %}
           </select>
-          <input type="text" class="form-control mb-2" name="observacao" placeholder="Observação (opcional)">
+          <input type="text" class="form-control mb-2" name="observacao" placeholder="Observação (opcional)" aria-label="Observação (opcional)">
           <button type="submit" class="btn btn-success w-100" {{ '' if veiculos else 'disabled' }}>Registrar entrada</button>
           {% if not veiculos %}<div class="form-text">Nenhum veículo disponível (cadastre ou verifique quem já está dentro).</div>{% endif %}
         </form>

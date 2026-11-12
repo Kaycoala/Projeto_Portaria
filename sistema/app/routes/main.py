@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, current_app, render_template
 
 from app.auth import pode
 from app.db import get_db
-from app.services import dashboard_service
+from app.services import backup_service, dashboard_service
 
 main_bp = Blueprint("main", __name__)
 
@@ -16,4 +16,9 @@ def inicio():
         resumo = dashboard_service.resumo(db)
         if pode("consultar_historico"):
             ultimas = dashboard_service.ultimas_movimentacoes(db)
-    return render_template("index.html", resumo=resumo, ultimas=ultimas)
+    aviso_backup = None
+    if pode("gerenciar_backup"):          # só o administrador é avisado (RNF-05)
+        situacao = backup_service.situacao(current_app.config["BACKUP_DIR"])
+        if not situacao["em_dia"]:
+            aviso_backup = situacao
+    return render_template("index.html", resumo=resumo, ultimas=ultimas, aviso_backup=aviso_backup)

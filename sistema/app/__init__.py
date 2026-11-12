@@ -17,8 +17,13 @@ def create_app(config_teste=None):
     app = Flask(__name__)
     app.config["DATABASE"] = str(Path(app.instance_path) / "portaria.db")
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["BACKUP_DIR"] = str(Path(app.instance_path).parent / "backups")   # sistema/backups
+    app.config["BACKUP_MANTER"] = 30
     if config_teste:
         app.config.update(config_teste)
+        # Nos testes, os backups vão para a pasta temporária e nunca para a pasta real.
+        if "DATABASE" in config_teste and "BACKUP_DIR" not in config_teste:
+            app.config["BACKUP_DIR"] = str(Path(config_teste["DATABASE"]).parent / "backups")
     if not app.config.get("SECRET_KEY"):
         Path(app.instance_path).mkdir(parents=True, exist_ok=True)
         app.config["SECRET_KEY"] = _chave_secreta(app.instance_path)
@@ -51,6 +56,7 @@ def create_app(config_teste=None):
     from app.routes.acessos import acessos_bp
     from app.routes.auth import auth_bp
     from app.routes.autorizacoes import autorizacoes_bp
+    from app.routes.backup import backup_bp
     from app.routes.historico import historico_bp
     from app.routes.main import main_bp
     from app.routes.ocorrencias import ocorrencias_bp
@@ -67,6 +73,7 @@ def create_app(config_teste=None):
     app.register_blueprint(visitantes_bp)
     app.register_blueprint(autorizacoes_bp)
     app.register_blueprint(acessos_bp)
+    app.register_blueprint(backup_bp)
     app.register_blueprint(historico_bp)
     app.register_blueprint(ocorrencias_bp)
     app.register_blueprint(relatorios_bp)
@@ -83,5 +90,17 @@ def create_app(config_teste=None):
     @app.errorhandler(404)
     def erro_404(e):
         return render_template("erro.html", codigo=404, mensagem="Página não encontrada."), 404
+
+    @app.errorhandler(405)
+    def erro_405(e):
+        return render_template("erro.html", codigo=405,
+                               mensagem="Esta ação não pode ser feita desta forma. Volte ao início e use os botões da tela."), 405
+
+    @app.errorhandler(500)
+    def erro_500(e):
+        # Mensagem simples: os detalhes técnicos ficam no terminal, nunca na tela do usuário.
+        return render_template("erro.html", codigo=500,
+                               mensagem="Ocorreu um erro inesperado no sistema. Tente de novo; "
+                                        "se continuar, avise o administrador."), 500
 
     return app
