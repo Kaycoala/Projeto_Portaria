@@ -23,6 +23,7 @@ porque o PowerShell costuma bloquear o `activate`.)
 - `app/static/`: CSS e JavaScript
 - `run.py`: inicia o sistema
 - `backup.py`: cria uma cópia de segurança do banco
+- `popular_demo.py`: cria dados fictícios para demonstração (veja abaixo)
 
 ## Banco de dados
 
@@ -152,7 +153,7 @@ Uma cópia só no mesmo computador não protege contra defeito no disco.
 
 ## Perfis e permissões
 
-| Perfil | O que pode fazer (nesta versão e nas próximas) |
+| Perfil | O que pode fazer |
 |---|---|
 | Administrador | Tudo: usuários, cadastros, acessos, autorizações, ocorrências, relatórios, backup |
 | Porteiro | Cadastros, visitantes, entradas e saídas, histórico e ocorrências |
@@ -160,3 +161,26 @@ Uma cópia só no mesmo computador não protege contra defeito no disco.
 | Funcionário | Apenas entra no sistema (sem operações) |
 
 As regras ficam em `app/permissoes.py`.
+
+## Dados de demonstração
+
+Para mostrar o sistema com dados (apresentação, prints e vídeo), rode dentro de `sistema`, depois de criar o administrador:
+
+```
+venv\Scripts\python.exe popular_demo.py
+```
+
+Ele cria **dados fictícios**: os usuários `porteiro` e `gerente` (senha `demo123`), 8 pessoas, 5 veículos,
+5 visitantes (aguardando, autorizados e negado), entradas e saídas dos últimos dias e 2 ocorrências.
+Por segurança, o script **não roda** se o banco já tiver pessoas cadastradas. Para recomeçar do zero em um banco
+de testes, use `criar_banco.py --recriar` e depois `criar_admin.py`.
+
+## Modo de desenvolvimento
+
+Por padrão o sistema roda com o modo de desenvolvimento desligado: se algo der errado, o usuário vê uma página de
+erro simples. Quem estiver alterando o código pode ligar o recarregamento automático e os detalhes técnicos dos erros:
+
+```
+$env:PORTARIA_DEBUG = "1"
+venv\Scripts\python.exe run.py
+```

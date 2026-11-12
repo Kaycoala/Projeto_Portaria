@@ -39,5 +39,5 @@ def baixar_csv():
         flash(str(erro), "erro")
         return redirect(url_for("relatorios.gerar", data_de=data_de, data_ate=data_ate))
     conteudo = "\ufeff" + servico.gerar_csv(relatorio)      # BOM: acentos corretos no Excel
-    return Response(conteudo, mimetype="text/csv; charset=utf-8", headers={
+    return Response(conteudo, mimetype="text/csv", headers={
         "Content-Disposition": f'attachment; filename="{servico.nome_arquivo_csv(relatorio)}"'})

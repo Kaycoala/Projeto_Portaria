@@ -5,10 +5,10 @@
 Projeto acadêmico desenvolvido para a disciplina de **Análise e Projeto de Sistemas**, com o objetivo de organizar e facilitar o controle de entrada e saída de pessoas e veículos.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-yellow" alt="Status: Em desenvolvimento">
+  <img src="https://img.shields.io/badge/Status-Est%C3%A1vel-brightgreen" alt="Status: Estável">
   <img src="https://img.shields.io/badge/Documenta%C3%A7%C3%A3o-UML-blue" alt="Documentação UML">
   <img src="https://img.shields.io/badge/Projeto-Acad%C3%AAmico-purple" alt="Projeto acadêmico">
-  <img src="https://img.shields.io/badge/Vers%C3%A3o-0.9.0-green" alt="Versão 0.9.0">
+  <img src="https://img.shields.io/badge/Vers%C3%A3o-1.0.0-green" alt="Versão 1.0.0">
   <img src="https://img.shields.io/badge/Python-Flask-informational" alt="Python e Flask">
   <img src="https://img.shields.io/badge/Banco-SQLite-lightgrey" alt="SQLite">
 </p>
@@ -40,7 +40,7 @@ A proposta é centralizar as informações da portaria, facilitar a identificaç
 
 Este repositório reúne a documentação, os diagramas UML e os demais materiais desenvolvidos durante o planejamento e a implementação do sistema.
 
-> **Status atual:** versão **0.9.0**. Os requisitos funcionais RF-01 a RF-10 e o backup (RNF-05) estão implementados e cobertos por testes automatizados. A próxima versão é a entrega final, com prints, vídeo e PDF (1.0.0). Veja o [CHANGELOG](CHANGELOG.md).
+> **Status atual:** versão **1.0.0** (primeira versão estável). Os requisitos funcionais RF-01 a RF-10 e os requisitos não funcionais RNF-01 a RNF-05 estão implementados e cobertos por 262 testes automatizados. Veja o [CHANGELOG](CHANGELOG.md).
 
 ## 🎯 Objetivos
 
@@ -94,8 +94,10 @@ Para editar os arquivos `.drawio`, utilize o [diagrams.net](https://app.diagrams
 | Requisitos do sistema | Requisitos funcionais, não funcionais e regras de negócio. | [Abrir DOCX](documentacao/requisitos%20do%20sistema.docx) |
 | Casos de uso textuais | UC01 Registrar entrada, UC02 Autorizar visitante e UC03 Consultar histórico. | [Abrir PDF](documentacao/Casos_de_Uso_Sistema_Controle_de_Portaria.pdf) |
 | Manual do sistema | Como instalar, executar, testar e usar cada tela. | [README do sistema](sistema/README.md) |
+| Correspondência com a modelagem | Como cada classe do diagrama virou tabela no banco de dados. | [Abrir](documentacao/Correspondencia_Modelagem.md) |
+| Prints do sistema | Lista e roteiro das capturas de tela reais. | [Abrir](documentacao/prints/README.md) |
 | Histórico de versões | O que foi feito em cada versão. | [CHANGELOG](CHANGELOG.md) |
-| Documentação completa em PDF | Documento consolidado com requisitos, modelagem e prints reais. | ⏳ Pendente (versão 1.0.0) |
+| Documentação completa em PDF | Documento consolidado com requisitos, modelagem e prints reais. | ⏳ Pendente: gerado por `documentacao/gerar_pdf.py` depois dos prints |
 
 ## 🚀 Como executar
 
@@ -109,7 +111,7 @@ venv\Scripts\python.exe criar_admin.py
 venv\Scripts\python.exe run.py
 ```
 
-Abra http://127.0.0.1:5000 e entre com o administrador criado. Para rodar os testes automatizados:
+Abra http://127.0.0.1:5000 e entre com o administrador criado. Para conhecer o sistema com dados fictícios (porteiro, gerente, pessoas, veículos, visitantes e movimentações), rode também `venv\Scripts\python.exe popular_demo.py` antes do `run.py`. Para rodar os testes automatizados:
 
 ```
 venv\Scripts\python.exe -m unittest discover tests -v
@@ -117,9 +119,9 @@ venv\Scripts\python.exe -m unittest discover tests -v
 
 ## 🎥 Demonstração do sistema
 
-O vídeo terá **duração máxima de um minuto** e mostrará as principais funcionalidades funcionando.
+O vídeo terá **duração máxima de um minuto** e mostrará as principais funcionalidades funcionando. O passo a passo da gravação está no [roteiro do vídeo](video/ROTEIRO.md).
 
-⏳ **Pendente (versão 1.0.0).** Mais detalhes na [pasta do vídeo](video/README.md).
+⏳ **Pendente:** o arquivo MP4 será adicionado à [pasta do vídeo](video/README.md) depois da gravação.
 
 ## 🛡️ Requisitos não funcionais
 
@@ -157,7 +159,8 @@ O vídeo terá **duração máxima de um minuto** e mostrará as principais func
 - [x] 0.7.0 — Histórico e ocorrências
 - [x] 0.8.0 — Dashboard e relatórios
 - [x] 0.9.0 — Interface e melhorias
-- [ ] 1.0.0 — Primeira versão estável (prints, vídeo e PDF final)
+- [x] 1.0.0 — Primeira versão estável (testes gerais, correções finais e documentação)
+  - [ ] Entrega: prints reais, vídeo de demonstração e PDF final
 
 O detalhe de cada versão está no [CHANGELOG](CHANGELOG.md) e nos commits do repositório.
 
@@ -169,8 +172,8 @@ Projeto_Portaria/
 ├── CHANGELOG.md           ← histórico de versões
 ├── .gitignore             ← impede o envio do banco e da chave secreta
 ├── diagramas/             ← diagramas UML (JPG e .drawio)
-├── documentacao/          ← requisitos e casos de uso
-├── video/                 ← vídeo de demonstração
+├── documentacao/          ← requisitos, casos de uso, prints e gerador do PDF
+├── video/                 ← vídeo de demonstração e roteiro
 └── sistema/               ← código-fonte
     ├── app/
     │   ├── routes/        ← telas e ações de cada módulo
@@ -184,6 +187,7 @@ Projeto_Portaria/
     ├── backup.py          ← cópia de segurança do banco
     ├── criar_admin.py
     ├── criar_banco.py
+    ├── popular_demo.py    ← dados fictícios para demonstração
     └── run.py
 ```
 

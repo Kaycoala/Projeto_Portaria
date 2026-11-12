@@ -3,9 +3,33 @@
 Todas as versões do Sistema de Controle de Portaria e o que mudou em cada uma.
 O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e as versões seguem o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [Planejado]
+## [1.0.0] — Primeira versão estável
 
-- **1.0.0 — Primeira versão estável:** testes gerais, README e documentação finais, prints, vídeo e PDF.
+### Adicionado
+- Script `popular_demo.py`: cria dados **fictícios** (pessoas, veículos, visitantes em várias situações, entradas,
+  saídas e ocorrências de vários dias) para tirar os prints e gravar o vídeo. Só roda em banco vazio.
+- Roteiro dos prints reais (`documentacao/prints/README.md`) e roteiro do vídeo de 1 minuto (`video/ROTEIRO.md`).
+- Gerador do PDF final (`documentacao/gerar_pdf.py`): monta o documento com requisitos, regras, diagramas,
+  casos de uso e prints. Ele se recusa a gerar o PDF se faltar algum print ou se a capa não estiver preenchida.
+- Documento `documentacao/Correspondencia_Modelagem.md`, que liga cada classe do diagrama às tabelas do banco.
+- Testes automatizados do script de demonstração e da correção do CSV (262 testes no total).
+
+### Alterado
+- O sistema agora inicia com o modo de desenvolvimento **desligado**: erros inesperados mostram a página amigável,
+  e não os detalhes técnicos. Para ligar: `$env:PORTARIA_DEBUG = "1"` antes de rodar `run.py`.
+- A pasta `sistema/backups/` foi listada no `.gitignore` (ela contém dados pessoais).
+- README, documentação e pastas `diagramas/`, `documentacao/` e `video/` atualizados.
+
+### Corrigido
+- O download do relatório em CSV enviava o `charset=utf-8` duas vezes no cabeçalho.
+- O README da pasta `diagramas/` falava em arquivos PNG, mas os diagramas são JPG.
+
+### Testes gerais (V1.0.0)
+- 262 testes automatizados passando.
+- Teste de ponta a ponta pelo servidor: cadastro, visitante pendente bloqueado, autorização, entrada, saída,
+  ocorrência, histórico, exclusão lógica, relatório, CSV e backup; todas as telas em cada um dos 4 perfis.
+- Desempenho com 30 mil acessos no banco: todas as telas responderam em menos de 1 segundo
+  (maior tempo: relatório de 90 dias, cerca de 0,6 s), atendendo o RNF-01 (até 2 segundos).
 
 ## [0.9.0] — Interface e melhorias
 
