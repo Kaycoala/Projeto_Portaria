@@ -1,9 +1,8 @@
 # Vídeo de demonstração
 
-Esta pasta recebe o vídeo de demonstração do Sistema de Controle de Portaria.
+Esta pasta contém o vídeo de demonstração do Sistema de Controle de Portaria.
 
-- Formato: MP4
-- Duração máxima: 1 minuto
+- Arquivo: [`demonstracao.mp4`](demonstracao.mp4)
+- Formato: MP4, com menos de 1 minuto
 - Conteúdo: as principais funcionalidades do sistema funcionando
-
-⏳ **Pendente:** o arquivo `demonstracao.mp4` será adicionado depois da gravação.
+- Passo a passo usado na gravação: [ROTEIRO.md](ROTEIRO.md)
