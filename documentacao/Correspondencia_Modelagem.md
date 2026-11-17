@@ -1,28 +1,35 @@
 # Correspondência entre a modelagem UML e a implementação
 
-Este documento mostra como as classes do **Diagrama de Classes** foram implementadas no banco de dados
-(`sistema/banco/schema.sql`). O diagrama não foi alterado.
+Este documento mostra como as classes do **Diagrama de Classes** (versão revisada, em `diagramas/`) foram
+implementadas no banco de dados (`sistema/banco/schema.sql`) e nos serviços (`sistema/app/services/`).
 
 ## Classes e tabelas
 
-| Classe (diagrama) | Tabela(s) no banco | Observações |
-|---|---|---|
-| **Pessoa** (id, nome, cpf, telefone, email) | `pessoa` | Acrescenta `endereco_setor` e `tipo` (morador, funcionário ou prestador), exigidos pelo RF-01, e `ativo`. CPF único (RN-06). |
-| **Veiculo** (id, placa, modelo, cor) | `veiculo` | Ligado ao proprietário por `pessoa_id` (1 pessoa pode ter 0..* veículos). Placa única (RN-07). |
-| **Visitante** (pessoaVisitada, motivoVisita), que "pode ser um" Pessoa | `visitante` | A herança foi implementada com uma tabela própria que repete nome, CPF e telefone. `pessoaVisitada` virou a chave estrangeira `pessoa_visitada_id`. |
-| **Acesso** (id, dataHoraEntrada, dataHoraSaida, tipo) | `registro_acesso` | `tipo` indica pessoa, visitante ou veículo. Guarda o porteiro que registrou e a exclusão lógica (`ativo`), para preservar o histórico (RN-08). |
-| **Ocorrencia** (id, dataHora, descricao) | `ocorrencia` e `ocorrencia_pessoa` | A tabela de ligação guarda as pessoas envolvidas (RF-09). |
-| **Usuario** (id, login, senha, perfil) | `usuario` e `perfil` | A senha é guardada como hash. O atributo `perfil` virou a tabela `perfil`, e as permissões de cada perfil ficam em `sistema/app/permissoes.py`. |
+| Classe (diagrama) | Tabela(s) no banco | Serviço | Observações |
+|---|---|---|---|
+| **Perfil** | `perfil` | `usuario_service` | 4 perfis iniciais. As permissões de cada perfil ficam em `sistema/app/permissoes.py`. |
+| **Usuario** | `usuario` | `usuario_service` | Login único; senha guardada como hash; ligado a um `perfil` e, opcionalmente, a uma pessoa. Não permite desativar o último administrador. |
+| **Pessoa** | `pessoa` | `pessoa_service` | `tipo` (morador, funcionário ou prestador), `endereco_setor` e `ativo`. CPF único (RN-06). |
+| **Veiculo** | `veiculo` | `veiculo_service` | Ligado ao proprietário por `pessoa_id` (1 pessoa pode ter 0..* veículos). Placa única (RN-07). |
+| **Visitante** | `visitante` | `visitante_service` | Tabela independente, com nome, CPF e telefone próprios (não herda de Pessoa). `pessoa_visitada_id` é chave estrangeira obrigatória para `pessoa`. |
+| **Autorizacao** | `autorizacao` | `autorizacao_service` | Status (pendente, aprovada ou negada), período, quem decidiu e quando (RF-06, RN-09). |
+| **RegistroAcesso** | `registro_acesso` | `acesso_service`, `historico_service` | `tipo` indica pessoa, visitante ou veículo; uma restrição `CHECK` exige o vínculo correspondente. Guarda o porteiro que registrou e a exclusão lógica (`ativo`, RN-08). A saída não pode ser anterior à entrada. |
+| **Ocorrencia** | `ocorrencia` e `ocorrencia_pessoa` | `ocorrencia_service` | A tabela de ligação guarda as pessoas envolvidas (RF-09). Exclusão lógica. |
 
 ## Métodos do diagrama
 
-Os métodos (`cadastrar()`, `consultar()`, `registrarEntrada()`, `registrarSaida()`, `registrar()`,
-`autenticar()`) foram implementados como funções na pasta `sistema/app/services/`, uma por regra de negócio.
+O código não usa classes de domínio com métodos. As operações desenhadas no diagrama (`cadastrar()`, `consultar()`,
+`registrarEntrada()`, `registrarSaida()`, `aprovar()`, `negar()`, `autenticar()` e outras) representam a responsabilidade
+lógica de cada entidade e foram implementadas como funções na pasta `sistema/app/services/`, uma por assunto.
 
-## O que a implementação acrescentou
+## Diferenças em relação ao primeiro diagrama de classes
 
-| Elemento | Motivo |
+| Primeiro diagrama | Sistema implementado |
 |---|---|
-| Tabela `autorizacao` (visitante, status, período, quem decidiu, quando) | O RF-06 e o UC02 pedem que a decisão do aprovador fique registrada e consultável. O diagrama de classes não traz uma classe para isso. |
-| Tabela `perfil` | Os perfis e as permissões (RNF-04) precisam existir de forma controlável. |
-| Campos `ativo` | Permitem desativar cadastros e excluir registros sem apagá-los, preservando o histórico (RN-08). |
+| Visitante "pode ser um" Pessoa (herança). | Visitante é uma tabela independente; liga-se a uma Pessoa apenas como pessoa visitada. |
+| `pessoaVisitada` era um texto. | Virou a chave estrangeira `pessoa_visitada_id`. |
+| Acesso se relacionava só com Pessoa. | O registro de acesso se relaciona com Pessoa, Visitante ou Veículo, conforme o tipo, e com o Usuário que registrou. |
+| Acesso "pode registrar" Ocorrência. | A ocorrência liga-se ao usuário que a registrou e, por associação N:N, às pessoas envolvidas. |
+| Não havia classe para a decisão de autorização. | Existe `Autorizacao`, indispensável para RF-06 e RN-09. |
+| `Usuario` tinha o atributo `perfil`. | `Perfil` é uma classe e uma tabela próprias. |
+| Sem atributos de situação. | `ativo` em Pessoa, Veiculo, Usuario, RegistroAcesso e Ocorrencia permite desativar ou excluir logicamente sem perder dados (RN-08). |
