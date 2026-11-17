@@ -1,0 +1,74 @@
+digraph G {
+  graph [rankdir=TB, nodesep=0.55, ranksep=0.8, splines=true, fontname="DejaVu Sans", dpi=200, pad=0.2];
+  node [shape=plain, fontname="DejaVu Sans", fontsize=10];
+  edge [fontname="DejaVu Sans", fontsize=9, arrowsize=0.8];
+
+  Perfil [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#dde6f3" border="1" sides="B"><b>Perfil</b></td></tr>
+   <tr><td align="left" sides="B" border="1">- id: int<br align="left"/>- nome: String {unique}<br align="left"/>- descricao: String<br align="left"/></td></tr>
+   <tr><td align="left">+ possuiPermissao(permissao: String): boolean<br align="left"/></td></tr></table>>];
+
+  Usuario [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#dde6f3" border="1" sides="B"><b>Usuario</b></td></tr>
+   <tr><td align="left" sides="B" border="1">- id: int<br align="left"/>- login: String {unique}<br align="left"/>- senhaHash: String<br align="left"/>- ativo: boolean<br align="left"/>- criadoEm: DateTime<br align="left"/></td></tr>
+   <tr><td align="left">+ autenticar(login: String, senha: String): boolean<br align="left"/>+ criar(login: String, senha: String, perfil: Perfil): Usuario<br align="left"/>+ atualizar(): void<br align="left"/>+ alternarAtivo(): void<br align="left"/></td></tr></table>>];
+
+  Pessoa [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#dde6f3" border="1" sides="B"><b>Pessoa</b></td></tr>
+   <tr><td align="left" sides="B" border="1">- id: int<br align="left"/>- nome: String<br align="left"/>- cpf: String {unique}<br align="left"/>- telefone: String<br align="left"/>- email: String<br align="left"/>- enderecoSetor: String<br align="left"/>- tipo: TipoPessoa<br align="left"/>- ativo: boolean<br align="left"/>- criadoEm: DateTime<br align="left"/></td></tr>
+   <tr><td align="left">+ cadastrar(): Pessoa<br align="left"/>+ consultar(filtro: String): List&lt;Pessoa&gt;<br align="left"/>+ atualizar(): void<br align="left"/>+ alternarAtivo(): void<br align="left"/></td></tr></table>>];
+
+  Veiculo [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#dde6f3" border="1" sides="B"><b>Veiculo</b></td></tr>
+   <tr><td align="left" sides="B" border="1">- id: int<br align="left"/>- placa: String {unique}<br align="left"/>- modelo: String<br align="left"/>- cor: String<br align="left"/>- ativo: boolean<br align="left"/>- criadoEm: DateTime<br align="left"/></td></tr>
+   <tr><td align="left">+ cadastrar(proprietario: Pessoa): Veiculo<br align="left"/>+ consultar(filtro: String): List&lt;Veiculo&gt;<br align="left"/>+ atualizar(): void<br align="left"/>+ alternarAtivo(): void<br align="left"/></td></tr></table>>];
+
+  Visitante [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#dde6f3" border="1" sides="B"><b>Visitante</b></td></tr>
+   <tr><td align="left" sides="B" border="1">- id: int<br align="left"/>- nome: String<br align="left"/>- cpf: String<br align="left"/>- telefone: String<br align="left"/>- motivo: String<br align="left"/>- criadoEm: DateTime<br align="left"/></td></tr>
+   <tr><td align="left">+ cadastrar(visitada: Pessoa): Visitante<br align="left"/>+ consultar(filtro: String): List&lt;Visitante&gt;<br align="left"/>+ atualizar(): void<br align="left"/></td></tr></table>>];
+
+  Autorizacao [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#dde6f3" border="1" sides="B"><b>Autorizacao</b></td></tr>
+   <tr><td align="left" sides="B" border="1">- id: int<br align="left"/>- status: StatusAutorizacao<br align="left"/>- dataInicio: Date [0..1]<br align="left"/>- dataFim: Date [0..1]<br align="left"/>- solicitadoEm: DateTime<br align="left"/>- decididoEm: DateTime [0..1]<br align="left"/>- observacao: String<br align="left"/></td></tr>
+   <tr><td align="left">+ solicitar(visitante: Visitante): Autorizacao<br align="left"/>+ aprovar(inicio: Date, fim: Date): void<br align="left"/>+ negar(): void<br align="left"/>+ estaVigente(dia: Date): boolean<br align="left"/></td></tr></table>>];
+
+  RegistroAcesso [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#dde6f3" border="1" sides="B"><b>RegistroAcesso</b></td></tr>
+   <tr><td align="left" sides="B" border="1">- id: int<br align="left"/>- tipo: TipoAcesso<br align="left"/>- entradaEm: DateTime<br align="left"/>- saidaEm: DateTime [0..1]<br align="left"/>- observacao: String<br align="left"/>- ativo: boolean<br align="left"/></td></tr>
+   <tr><td align="left">+ registrarEntrada(): RegistroAcesso<br align="left"/>+ registrarSaida(): void<br align="left"/>+ consultarHistorico(filtro: FiltroHistorico): List&lt;RegistroAcesso&gt;<br align="left"/>+ corrigirObservacao(texto: String): void<br align="left"/>+ excluirLogicamente(): void<br align="left"/></td></tr></table>>];
+
+  Ocorrencia [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#dde6f3" border="1" sides="B"><b>Ocorrencia</b></td></tr>
+   <tr><td align="left" sides="B" border="1">- id: int<br align="left"/>- dataHora: DateTime<br align="left"/>- descricao: String<br align="left"/>- ativo: boolean<br align="left"/></td></tr>
+   <tr><td align="left">+ registrar(pessoas: List&lt;Pessoa&gt;): Ocorrencia<br align="left"/>+ atualizar(): void<br align="left"/>+ excluirLogicamente(): void<br align="left"/></td></tr></table>>];
+
+  TipoPessoa [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#eee8d5" border="1" sides="B">«enumeration»<br/><b>TipoPessoa</b></td></tr>
+   <tr><td align="left">morador<br align="left"/>funcionario<br align="left"/>prestador<br align="left"/></td></tr></table>>];
+  StatusAutorizacao [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#eee8d5" border="1" sides="B">«enumeration»<br/><b>StatusAutorizacao</b></td></tr>
+   <tr><td align="left">pendente<br align="left"/>aprovada<br align="left"/>negada<br align="left"/></td></tr></table>>];
+  TipoAcesso [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="white">
+   <tr><td bgcolor="#eee8d5" border="1" sides="B">«enumeration»<br/><b>TipoAcesso</b></td></tr>
+   <tr><td align="left">pessoa<br align="left"/>visitante<br align="left"/>veiculo<br align="left"/></td></tr></table>>];
+
+  edge [arrowhead=none];
+  Perfil -> Usuario [headlabel="0..*", taillabel="1", label=" possui "];
+  Usuario -> RegistroAcesso [taillabel="1", headlabel="0..*", label=" registra "];
+  Usuario -> Ocorrencia [taillabel="1", headlabel="0..*", label=" registra "];
+  Usuario -> Autorizacao [taillabel="0..1", headlabel="0..*", label=" decide "];
+  Usuario -> Pessoa [taillabel="0..*", headlabel="0..1", label=" vinculado a "];
+  Pessoa -> Veiculo [taillabel="1", headlabel="0..*", label=" é proprietária de "];
+  Pessoa -> Visitante [taillabel="1", headlabel="0..*", label=" é visitada por "];
+  Visitante -> Autorizacao [taillabel="1", headlabel="1..*", label=" solicita "];
+  RegistroAcesso -> Pessoa [taillabel="0..*", headlabel="0..1", label=" refere-se a "];
+  RegistroAcesso -> Visitante [taillabel="0..*", headlabel="0..1", label=" refere-se a "];
+  RegistroAcesso -> Veiculo [taillabel="0..*", headlabel="0..1", label=" refere-se a "];
+  Ocorrencia -> Pessoa [taillabel="0..*", headlabel="0..*", label=" envolve "];
+
+  edge [arrowhead=open, style=dashed, label="", headlabel="", taillabel=""];
+  Pessoa -> TipoPessoa;
+  Autorizacao -> StatusAutorizacao;
+  RegistroAcesso -> TipoAcesso;
+}
